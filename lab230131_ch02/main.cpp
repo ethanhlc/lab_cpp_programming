@@ -2,28 +2,22 @@
 
 using namespace std;
 
-bool IsPositive(int num)
+void SwapByRef2(int& ref1, int& ref2)
 {
-    if (num < 0)
-        return false;
-    else
-        return true;
+    int temp = ref1;
+    ref1 = ref2;
+    ref2 = temp;
 }
 
 int main(void)
 {
-    bool isPos;
-    int num;
+    int val1 = 10;
+    int val2 = 20;
 
-    cout << "Input number: ";
-    cin >> num;
+    SwapByRef2(val1, val2);
 
-    isPos = IsPositive(num);
-
-    if (isPos)
-        cout << "Positive number" << endl;
-    else
-        cout << "Negative number" << endl;
+    cout << "val1: " << val1 << endl;
+    cout << "val2: " << val2 << endl;
 
     return 0;
 }
