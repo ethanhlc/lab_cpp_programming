@@ -11,7 +11,7 @@ int& RefRetFuncOne(int& ref)
 int main(void)
 {
     int num1 = 10;
-    int& num2 = RefRetFuncOne(num1);
+    int num2 = RefRetFuncOne(num1);
     cout << "RefRetFunc(num1)" << endl;
     cout << endl;
 
