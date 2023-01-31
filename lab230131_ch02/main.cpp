@@ -2,22 +2,29 @@
 
 using namespace std;
 
-void SwapByRef2(int& ref1, int& ref2)
+int& RefRetFuncOne(int& ref)
 {
-    int temp = ref1;
-    ref1 = ref2;
-    ref2 = temp;
+    ref++;
+    return ref;
 }
 
 int main(void)
 {
-    int val1 = 10;
-    int val2 = 20;
+    int num1 = 10;
+    int& num2 = RefRetFuncOne(num1);
+    cout << "RefRetFunc(num1)" << endl;
+    cout << endl;
 
-    SwapByRef2(val1, val2);
+    num1++;
+    cout << "num1++" << endl;
+    cout << "num1: " << num1 << endl;
+    cout << "num2: " << num2 << endl;
+    cout << endl;
 
-    cout << "val1: " << val1 << endl;
-    cout << "val2: " << val2 << endl;
+    num2 += 10;
+    cout << "num2 += 10" << endl;
+    cout << "num1: " << num1 << endl;
+    cout << "num2: " << num2 << endl;
 
     return 0;
 }
