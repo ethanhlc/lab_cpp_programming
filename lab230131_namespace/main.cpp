@@ -2,18 +2,12 @@
 
 namespace BestComImpl
 {
-    void SimpleFunc(void)
-    {
-        std::cout << "Function defined in BestCom" << std::endl;
-    }
+    void SimpleFunc(void);
 }
 
 namespace ProgComImpl
 {
-    void SimpleFunc(void)
-    {
-        std::cout << "Function defined in ProgCom" << std::endl;
-    }
+    void SimpleFunc(void);
 }
 
 int main(void)
@@ -22,4 +16,14 @@ int main(void)
     ProgComImpl::SimpleFunc();
 
     return 0;
+}
+
+void BestComImpl::SimpleFunc(void)
+{
+    std::cout << "Function defined in BestCom" << std::endl;
+}
+
+void ProgComImpl::SimpleFunc(void)
+{
+    std::cout << "Function defined in ProgCom" << std::endl;
 }
