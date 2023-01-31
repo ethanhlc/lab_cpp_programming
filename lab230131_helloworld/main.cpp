@@ -2,11 +2,18 @@
 
 int main(void)
 {
-    int num = 20;
-    std::cout << "Hello World!" << std::endl;
-    std::cout << "Foo" << std::endl << ">> Bar" << std::endl;
-    std::cout << "num = " << num;
-    std::cout << " pi : " << 3.14 << std::endl;
+    int val1, val2, val3;
+    int result;
+
+    std::cout << "1st input: ";
+    std::cin >> val1;
+    std::cout << "2nd input: ";
+    std::cin >> val2;
+    std::cout << "3rd input: ";
+    std::cin >> val3;
+
+    result = (val1 + val2) / val3;
+    std::cout << "(A + B) / C = " << result << std::endl;
 
     return 0;
 }
