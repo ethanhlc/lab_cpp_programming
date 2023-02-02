@@ -18,6 +18,12 @@ int main(void)
     cout << "B: ";
     cin >> b;
 
+    if (a < 0 || b < 0)
+    {
+        cout << "Error: Negative number was input." << endl;
+        return -1;
+    }
+
     int c = GetArea(a, b);
     cout << "Area of Rectangle = " << c << endl;
 

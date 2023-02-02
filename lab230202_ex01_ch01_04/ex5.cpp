@@ -11,16 +11,28 @@ class Rectangle
     int height;
 
 public:
-    void SetWidth()
+    bool SetWidth()
     {
         cout << "A: ";
         cin >> width;
+        if (width < 0)
+        {
+            cout << "Error: Negative number was input." << endl;
+            return false;
+        }
+        return true;
     }
 
-    void SetHeight()
+    bool SetHeight()
     {
         cout << "B: ";
         cin >> height;
+        if (height < 0)
+        {
+            cout << "Error: Negative number was input." << endl;
+            return false;
+        }
+        return true;
     }
 
     int GetArea()
@@ -32,8 +44,10 @@ public:
 int main(void)
 {
     Rectangle a;
-    a.SetWidth();
-    a.SetHeight();
+    if (a.SetWidth() == false)
+        return -1;
+    if (a.SetHeight() == false)
+        return -1;
 
     cout << "Area of Rectangle = " << a.GetArea() << endl;
 

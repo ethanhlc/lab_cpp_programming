@@ -3,7 +3,6 @@
 // By: Ethan Baik
 
 #include <iostream>
-
 using namespace std;
 
 void GetInput();
@@ -14,6 +13,12 @@ int a, b;
 int main(void)
 {
     GetInput();
+    if (a < 0 || b < 0)
+    {
+        cout << "Error: Negative number was input." << endl;
+        return -1;
+    }
+
     PrintOutput();
 
     return 0;
