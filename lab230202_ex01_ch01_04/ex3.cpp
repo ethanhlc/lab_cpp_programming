@@ -1,0 +1,25 @@
+// Area calculation using w & h
+// function call-by-value
+// By: Ethan Baik
+
+#include <iostream>
+using namespace std;
+
+int GetArea(int x, int y)
+{
+    return x * y;
+}
+
+int main(void)
+{
+    int a, b;
+    cout << "A: ";
+    cin >> a;
+    cout << "B: ";
+    cin >> b;
+
+    int c = GetArea(a, b);
+    cout << "Area of Rectangle = " << c << endl;
+
+    return 0;
+}
