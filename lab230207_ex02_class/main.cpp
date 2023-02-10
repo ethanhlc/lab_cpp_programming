@@ -2,12 +2,15 @@
 // for lecture & student management
 // By: Ethan Baik
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 class CLecture
 {
 public:
+    // constructors & destructors
     CLecture(char *lect, int grd): grade(grd)
     {
         int len = strlen(lect) + 1;
@@ -15,9 +18,18 @@ public:
         strcpy(lecture_name, lect);
     }
     CLecture() = default;
-    ~CLecture()     // destructor to release allocated memory
+    // ~CLecture()     // destructor to release allocated memory
+    // {
+    //     delete[] lecture_name;
+    // }
+
+    // public methods
+    void SetLecture(char *lect, int grd)
     {
-        delete lecture_name;
+        int len = strlen(lect) + 1;
+        lecture_name = new char[len];
+        strcpy(lecture_name, lect);
+        grade = grd;
     }
 
 protected:
@@ -28,14 +40,16 @@ protected:
 class CStudent: public CLecture
 {
 public:
+    // constructors & destructors
+    // ~CStudent()     // destructor to release allocated memory
+    // {
+    //     delete[] name;
+    //     delete[] major;
+    // }
 
-    ~CStudent()     // destructor to release allocated memory
-    {
-        delete name;
-        delete major;
-    }
-
-    void SetStudent(int id_in, const char *name_in, const char *major_in)
+    // public methods
+    void SetStudent(int id_in, const char *name_in, const char *major_in,
+                    char *lecture, int grade)
     {
         id = id_in;
 
@@ -43,6 +57,8 @@ public:
         int major_len = strlen(major_in) + 1;
         strcpy(name, name_in);
         strcpy(major, major_in);
+
+        SetLecture(lecture, grade);
     }
     void PrintStudent()
     {
@@ -69,6 +85,33 @@ int main(void)
 
     CStudent *list = new CStudent[students];
 
-    delete list;
+    int id, grade;
+    string name, major, lecture;
+
+    for (int i = 0; i < students; i++)
+    {
+        cout << "Enter Student ID, Name, Major, Lecture, Grade: ";
+
+        bool dupe = false;
+        while (dupe == false)
+        {
+            cin >> id >> name >> major >> lecture >> grade;
+
+            // check duplicate id
+            for (int j = 0; j < i; j++)
+            {
+                if (list[j].GetID() == id)
+                {
+                    // duplicate
+                    cout << "Duplicate ID. Please re-enter information." << endl;
+                    dupe = true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+    delete[] list;
     return 0;
 }
