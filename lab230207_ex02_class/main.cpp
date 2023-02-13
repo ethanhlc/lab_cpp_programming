@@ -10,23 +10,6 @@ using namespace std;
 class CLecture
 {
 public:
-    // constructors & destructors
-    // CLecture(char *lect, int grd): grade(grd)
-    // {
-    //     int len = strlen(lect) + 1;
-    //     lecture_name = new char[len];
-    //     strcpy(lecture_name, lect);
-    // }
-    // CLecture(): grade(0)      // default constructor
-    // {
-    //     lecture_name = NULL;
-    // }
-    // ~CLecture()     // destructor to release allocated memory
-    // {
-    //     if (lecture_name != NULL)
-    //         delete[] lecture_name;
-    // }
-
     // public methods
     void SetLecture(string lect, int grd)
     {
@@ -42,20 +25,6 @@ protected:
 class CStudent: public CLecture
 {
 public:
-    // constructors & destructors
-    // CStudent(): id(0)
-    // {
-    //     name = NULL;
-    //     major = NULL;
-    // }
-    // ~CStudent()     // destructor to release allocated memory
-    // {
-    //     if (name != NULL)
-    //         delete[] name;
-    //     if (major != NULL)
-    //         delete[] major;
-    // }
-
     // public methods
     void SetStudent(int id_in, string name_in, string major_in,
                     string lecture, int grade)
@@ -65,6 +34,13 @@ public:
         major = major_in;
 
         SetLecture(lecture, grade);
+    }
+    // set CLecture separately
+    void SetStudent(int id_in, string name_in, string major_in)
+    {
+        id = id_in;
+        name = name_in;
+        major = major_in;
     }
     void PrintStudent()
     {
@@ -95,12 +71,10 @@ int main(void)
 
     for (int i = 0; i < students; i++)
     {
-        cout << "Enter Student ID, Name, Major, Lecture, Grade: ";
-
         bool dupe = false;
         do
         {
-            dupe = false;
+            cout << "Enter Student ID, Name, Major, Lecture, Grade: ";
             cin >> id >> name >> major >> lecture >> grade;
 
             // check duplicate id
@@ -113,14 +87,18 @@ int main(void)
                     dupe = true;
                     break;
                 }
+                dupe = false;   // re-init dupe for loop
             }
         } while (dupe == true);
 
-        list[i].SetStudent(id, name, major, lecture, grade);
+        // list[i].SetStudent(id, name, major, lecture, grade);
+        list[i].SetStudent(id, name, major);
+        list[i].SetLecture(lecture, grade);
     }
 
     for (int i = 0; i < students; i++)
     {
+        cout << i + 1 << ") ";
         list[i].PrintStudent();
     }
 
