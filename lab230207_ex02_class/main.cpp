@@ -89,6 +89,16 @@ int main(void)
                 }
                 dupe = false;   // re-init dupe for loop
             }
+
+            if (grade < 0 || grade > 100)
+            {
+                cout << "Grade out of range. Please re-enter information." << endl;
+                dupe = true;
+            }
+            else
+            {
+                dupe = false;
+            }
         } while (dupe == true);
 
         // list[i].SetStudent(id, name, major, lecture, grade);
