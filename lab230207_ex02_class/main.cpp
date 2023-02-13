@@ -11,29 +11,31 @@ class CLecture
 {
 public:
     // constructors & destructors
-    CLecture(char *lect, int grd): grade(grd)
-    {
-        int len = strlen(lect) + 1;
-        lecture_name = new char[len];
-        strcpy(lecture_name, lect);
-    }
-    CLecture() = default;
+    // CLecture(char *lect, int grd): grade(grd)
+    // {
+    //     int len = strlen(lect) + 1;
+    //     lecture_name = new char[len];
+    //     strcpy(lecture_name, lect);
+    // }
+    // CLecture(): grade(0)      // default constructor
+    // {
+    //     lecture_name = NULL;
+    // }
     // ~CLecture()     // destructor to release allocated memory
     // {
-    //     delete[] lecture_name;
+    //     if (lecture_name != NULL)
+    //         delete[] lecture_name;
     // }
 
     // public methods
-    void SetLecture(char *lect, int grd)
+    void SetLecture(string lect, int grd)
     {
-        int len = strlen(lect) + 1;
-        lecture_name = new char[len];
-        strcpy(lecture_name, lect);
+        lecture_name = lect;
         grade = grd;
     }
 
 protected:
-    char *lecture_name;
+    string lecture_name;
     int grade;
 };
 
@@ -41,30 +43,33 @@ class CStudent: public CLecture
 {
 public:
     // constructors & destructors
+    // CStudent(): id(0)
+    // {
+    //     name = NULL;
+    //     major = NULL;
+    // }
     // ~CStudent()     // destructor to release allocated memory
     // {
-    //     delete[] name;
-    //     delete[] major;
+    //     if (name != NULL)
+    //         delete[] name;
+    //     if (major != NULL)
+    //         delete[] major;
     // }
 
     // public methods
-    void SetStudent(int id_in, const char *name_in, const char *major_in,
-                    char *lecture, int grade)
+    void SetStudent(int id_in, string name_in, string major_in,
+                    string lecture, int grade)
     {
         id = id_in;
-
-        int name_len = strlen(name_in) + 1;
-        int major_len = strlen(major_in) + 1;
-        strcpy(name, name_in);
-        strcpy(major, major_in);
+        name = name_in;
+        major = major_in;
 
         SetLecture(lecture, grade);
     }
     void PrintStudent()
     {
-        cout << "Student ID: " << id << endl;
-        cout << "Student name: " << name << endl;
-        cout << "Student major: " << major << endl;
+        cout << "Student ID: " << id << ", Name: " << name << ", Major: " << major;
+        cout << ", Lecture: " << lecture_name << ", Grade: " << grade << endl;
     }
     int GetID()
     {
@@ -73,8 +78,8 @@ public:
 
 private:
     int id;
-    char *name;
-    char *major;
+    string name;
+    string major;
 };
 
 int main(void)
@@ -93,8 +98,9 @@ int main(void)
         cout << "Enter Student ID, Name, Major, Lecture, Grade: ";
 
         bool dupe = false;
-        while (dupe == false)
+        do
         {
+            dupe = false;
             cin >> id >> name >> major >> lecture >> grade;
 
             // check duplicate id
@@ -108,9 +114,15 @@ int main(void)
                     break;
                 }
             }
-        }
+        } while (dupe == true);
+
+        list[i].SetStudent(id, name, major, lecture, grade);
     }
 
+    for (int i = 0; i < students; i++)
+    {
+        list[i].PrintStudent();
+    }
 
     delete[] list;
     return 0;
