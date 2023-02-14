@@ -15,7 +15,7 @@ public:
 class BaseTwo
 {
 public:
-    void SimpleFunc2()
+    void SimpleFunc1()
     {
         cout << "BaseTwo" << endl;
     }
@@ -26,8 +26,8 @@ class MultiDerived: public BaseOne, protected BaseTwo
 public:
     void ComplexFunc()
     {
-        SimpleFunc1();
-        SimpleFunc2();
+        BaseOne::SimpleFunc1();
+        BaseTwo::SimpleFunc1();
     }
 };
 
