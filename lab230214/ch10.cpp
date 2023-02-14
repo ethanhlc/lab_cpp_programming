@@ -1,49 +1,54 @@
-// Operator overloading
+// Understandin cout & endl
 
-#include <iostream>
-
-using std::cout;
-using std::endl;
-
-class Point
+#include <cstdio>
+namespace mystd
 {
-public:
-    Point(int x = 0, int y = 0): xpos(x), ypos(y)
-    { }
-
-    void ShowPosition() const
+    class ostream
     {
-        cout << '[' << xpos << ", " << ypos << ']' << endl;
-    }
-    Point &operator++()
-    {
-        xpos += 1;
-        ypos += 1;
-        return *this;
-    }
-    friend Point &operator--(Point &ref);
-private:
-    int xpos, ypos;
-};
+    public:
+        void operator<< (char *str)
+        {
+            printf("%s", str);
+        }
+        void operator<< (char str)
+        {
+            printf("%c", str);
+        }
+        void operator<< (int num)
+        {
+            printf("%d", num);
+        }
+        void operator<< (double e)
+        {
+            printf("%g", e);
+        }
+        void operator<< (ostream &(*fp)(ostream &ostm))
+        {
+            fp(*this);
+        }
+    };
 
-Point &operator--(Point &ref)
-{
-    ref.xpos -= 1;
-    ref.ypos -= 1;
-    return ref;
-}
+    ostream &endl(ostream &ostm)
+    {
+        ostm << '\n';
+        fflush(stdout);
+        return ostm;
+    }
+
+    ostream cout;
+} // namespace mystd
 
 int main(void)
 {
-    Point pos1(3, 4);
-    ++pos1;
-    pos1.ShowPosition();
-    --pos1;
-    pos1.ShowPosition();
-    ++(++pos1);
-    pos1.ShowPosition();
-    --(--pos1);
-    pos1.ShowPosition();
+    using mystd::cout;
+    using mystd::endl;
+
+    cout << "Simple String";
+    cout << endl;
+    cout << 3.14;
+    cout << endl;
+    cout << 123;
+    endl(cout);
 
     return 0;
 }
