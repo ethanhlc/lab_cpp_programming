@@ -6,7 +6,7 @@ using std::endl;
 class First
 {
 public:
-    void FirstFunc()
+    virtual void myFunc()
     {
         cout << "FirstFunc" << endl;
     }
@@ -15,7 +15,7 @@ public:
 class Second: public First
 {
 public:
-    void SecondFunc()
+    virtual void myFunc()
     {
         cout << "SecondFunc" << endl;
     }
@@ -24,7 +24,7 @@ public:
 class Third: public Second
 {
 public:
-    void ThirdFunc()
+    virtual void myFunc()
     {
         cout << "ThirdFunc" << endl;
     }
@@ -36,17 +36,9 @@ int main(void)
     Second *sptr = tptr;
     First *fptr = sptr;
 
-    tptr->FirstFunc();
-    tptr->SecondFunc();
-    tptr->ThirdFunc();
-
-    sptr->FirstFunc();
-    sptr->SecondFunc();
-    // sptr->ThirdFunc();
-
-    fptr->FirstFunc();
-    // fptr->SecondFunc();
-    // fptr->ThirdFunc();
+    tptr->myFunc();
+    sptr->myFunc();
+    fptr->myFunc();
 
     return 0;
 }
