@@ -6,39 +6,58 @@ using std::endl;
 class First
 {
 public:
-    virtual void myFunc()
+    void FirstFunc()
     {
         cout << "FirstFunc" << endl;
+    }
+    virtual void SimpleFunc()
+    {
+        cout << "First's SimpleFunc" << endl;
     }
 };
 
 class Second: public First
 {
 public:
-    virtual void myFunc()
+    void SecondFunc()
     {
         cout << "SecondFunc" << endl;
+    }
+    virtual void SimpleFunc()
+    {
+        cout << "Second's SimpleFunc" << endl;
     }
 };
 
 class Third: public Second
 {
 public:
-    virtual void myFunc()
+    void ThirdFunc()
     {
         cout << "ThirdFunc" << endl;
+    }
+    virtual void SimpleFunc()
+    {
+        cout << "Third's SimpleFunc" << endl;
     }
 };
 
 int main(void)
 {
-    Third *tptr = new Third();
-    Second *sptr = tptr;
-    First *fptr = sptr;
+    Third tobj;
+    tobj.FirstFunc();
+    tobj.SecondFunc();
+    tobj.ThirdFunc();
+    tobj.SimpleFunc();
 
-    tptr->myFunc();
-    sptr->myFunc();
-    fptr->myFunc();
+    Second &sref = tobj;
+    sref.FirstFunc();
+    sref.SecondFunc();
+    sref.SimpleFunc();
+
+    First &fref = tobj;
+    fref.FirstFunc();
+    fref.SimpleFunc();
 
     return 0;
 }
