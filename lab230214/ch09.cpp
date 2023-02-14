@@ -3,43 +3,38 @@
 using std::cout;
 using std::endl;
 
-class AAA
+class BaseOne
 {
 public:
-    virtual void Func1()
+    void SimpleFunc1()
     {
-        cout << "Func1" << endl;
+        cout << "BaseOne" << endl;
     }
-    virtual void Func2()
-    {
-        cout << "Func2" << endl;
-    }
-private:
-    int num1;
 };
 
-class BBB: public AAA
+class BaseTwo
 {
 public:
-    virtual void Func1()
+    void SimpleFunc2()
     {
-        cout << "BBB::Func1" << endl;
+        cout << "BaseTwo" << endl;
     }
-    void Func3()
+};
+
+class MultiDerived: public BaseOne, protected BaseTwo
+{
+public:
+    void ComplexFunc()
     {
-        cout << "Func3" << endl;
+        SimpleFunc1();
+        SimpleFunc2();
     }
-private:
-    int num2;
 };
 
 int main(void)
 {
-    AAA *aptr = new AAA();
-    aptr->Func1();
-
-    BBB *bptr = new BBB();
-    bptr->Func1();
+    MultiDerived mdr;
+    mdr.ComplexFunc();
 
     return 0;
 }
