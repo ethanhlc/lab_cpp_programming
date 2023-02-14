@@ -15,26 +15,35 @@ public:
     {
         cout << '[' << xpos << ", " << ypos << ']' << endl;
     }
-    friend Point operator+(const Point &pos1, const Point &pos2);
+    Point &operator++()
+    {
+        xpos += 1;
+        ypos += 1;
+        return *this;
+    }
+    friend Point &operator--(Point &ref);
 private:
     int xpos, ypos;
 };
 
-Point operator+(const Point &pos1, const Point &pos2)
+Point &operator--(Point &ref)
 {
-    Point pos(pos1.xpos + pos2.xpos, pos1.ypos + pos2.ypos);
-    return pos;
+    ref.xpos -= 1;
+    ref.ypos -= 1;
+    return ref;
 }
 
 int main(void)
 {
     Point pos1(3, 4);
-    Point pos2(10, 20);
-    Point pos3 = pos1 + pos2;
-
+    ++pos1;
     pos1.ShowPosition();
-    pos2.ShowPosition();
-    pos3.ShowPosition();
+    --pos1;
+    pos1.ShowPosition();
+    ++(++pos1);
+    pos1.ShowPosition();
+    --(--pos1);
+    pos1.ShowPosition();
 
     return 0;
 }
