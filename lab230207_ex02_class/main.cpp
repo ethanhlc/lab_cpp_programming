@@ -42,12 +42,12 @@ public:
         name = name_in;
         major = major_in;
     }
-    void PrintStudent()
+    void PrintStudent() const
     {
         cout << "Student ID: " << id << ", Name: " << name << ", Major: " << major;
         cout << ", Lecture: " << lecture_name << ", Grade: " << grade << endl;
     }
-    int GetID()
+    int GetID() const
     {
         return id;
     }
@@ -106,6 +106,7 @@ int main(void)
         list[i].SetLecture(lecture, grade);
     }
 
+    cout << endl << "Student List:" << endl;
     for (int i = 0; i < students; i++)
     {
         cout << i + 1 << ") ";
