@@ -35,22 +35,39 @@ const char *Max(const char *a, const char *b)
     return strcmp(a, b) > 0 ? a : b;    // if a after b: a, else: b
 }
 
+template <typename T>
+class Point
+{
+public:
+    Point(T x = 0, T y = 0): xpos(x), ypos(y)
+    { }
+    void ShowPosition() const
+    {
+        cout << '[' << xpos << ", " << ypos << ']' << endl;
+    }
+private:
+    T xpos, ypos;
+};
+
 int main(void)
 {
-    // ShowData<char, int>(65);
-    // ShowData<char, int>(67);
-    // ShowData<char, double>(68.9);
-    // ShowData<short, double>(69.2);
-    // ShowData<short, double>(70.4);
+    // cout << Max(11, 15) << endl;
+    // cout << Max('T', 'Q') << endl;
+    // cout << Max(3.5, 7.5) << endl;
+    // cout << Max("Simple", "Best") << endl;
 
-    cout << Max(11, 15) << endl;
-    cout << Max('T', 'Q') << endl;
-    cout << Max(3.5, 7.5) << endl;
-    cout << Max("Simple", "Best") << endl;
+    // char str1[] = "Simple";
+    // char str2[] = "Best";
+    // cout << Max(str1, str2) << endl;
 
-    char str1[] = "Simple";
-    char str2[] = "Best";
-    cout << Max(str1, str2) << endl;
+    Point<int> pos1(3, 4);
+    pos1.ShowPosition();
+
+    Point<double> pos2(2.4, 3.6);
+    pos2.ShowPosition();
+
+    Point<char> pos3('P', 'F');
+    pos3.ShowPosition();
 
     return 0;
 }
