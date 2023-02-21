@@ -8,6 +8,9 @@
 #include <fstream>
 
 using namespace std;
+// using std::cout;
+// using std::endl;
+// using std::string;
 
 // Function Declarations
 int isNumber(const string &str);
@@ -57,34 +60,6 @@ int main(void)
         return -1;
     }
 
-    cout << "Calculate Area of Rectangle." << endl;
-    bool isNum;
-    do
-    {
-        isNum = true;
-        getline(file_A, strA);
-        typeA = isNumber(strA);
-        if (typeA == -1)
-        {
-            cout << "Please enter a number." << endl;
-            isNum = false;
-        }
-    } while (isNum == false);
-    cout << "A: " << strA << endl;
-
-    do
-    {
-        isNum = true;
-        getline(file_B, strB);
-        typeB = isNumber(strB);
-        if (typeB == -1)
-        {
-            cout << "Please enter a number." << endl;
-            isNum = false;
-        }
-    } while (isNum == false);
-    cout << "B: " << strB << endl;
-
     // open output file
     ofstream file_out("result.txt");
 
@@ -94,20 +69,42 @@ int main(void)
         return -1;
     }
 
-    // define Rect r1 with correct type
-    if (typeA == 0 && typeB == 0)
+    cout << "Calculate Area of Rectangle." << endl;
+    bool end_of_input = false;
+    while (!end_of_input)
     {
-        Rect <int>r1(stoi(strA), stoi(strB));
-        file_out << "A: " << stoi(strA) << "\tB: " << stoi(strB);
-        cout << "Area of Rectangle: " << r1.GetArea() << endl;
-        file_out << "\tArea: " << r1.GetArea() << endl;
-    }
-    else    // type == 1 (float)
-    {
-        Rect <float>r1(stof(strA), stof(strB));
-        file_out << "A: " << stof(strA) << "\tB: " << stof(strB);
-        cout << "Area of Rectangle: " << r1.GetArea() << endl;
-        file_out << "\tArea: " << r1.GetArea() << endl;
+        getline(file_A, strA);
+        typeA = isNumber(strA);
+        getline(file_B, strB);
+        typeB = isNumber(strB);
+
+        if (typeA == -1 || typeB == -1)
+        {
+            cout << "Non-numerical input." << endl;
+            file_out << "Non-numerical input." << endl;
+            continue;
+        }
+
+        cout << "A: " << strA << endl;
+        cout << "B: " << strB << endl;
+
+        // define Rect r1 with correct type
+        if (typeA == 0 && typeB == 0)
+        {
+            Rect <int>r1(stoi(strA), stoi(strB));
+            file_out << "A: " << stoi(strA) << "\tB: " << stoi(strB);
+            cout << "Area of Rectangle: " << r1.GetArea() << endl;
+            file_out << "\tArea: " << r1.GetArea() << endl;
+        }
+        else    // type == 1 (float)
+        {
+            Rect <float>r1(stof(strA), stof(strB));
+            file_out << "A: " << stof(strA) << "\tB: " << stof(strB);
+            cout << "Area of Rectangle: " << r1.GetArea() << endl;
+            file_out << "\tArea: " << r1.GetArea() << endl;
+        }
+
+        end_of_input = file_A.eof() || file_B.eof();
     }
 
     file_A.close();
