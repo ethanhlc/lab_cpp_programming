@@ -63,7 +63,7 @@ int main(void)
         typeB = isNumber(strB);
         if (typeB == -1)
         {
-            cout << "Please enter a number." << endl;
+            cout << "Please enter a valid number." << endl;
             isNum = false;
         }
     } while (isNum == false);

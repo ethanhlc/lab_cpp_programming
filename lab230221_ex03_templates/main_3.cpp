@@ -80,8 +80,8 @@ int main(void)
 
         if (typeA == -1 || typeB == -1)
         {
-            cout << "Non-numerical input." << endl;
-            file_out << "Non-numerical input." << endl;
+            cout << "Non-valid input." << endl;
+            file_out << "Non-valid input." << endl;
             continue;
         }
 
