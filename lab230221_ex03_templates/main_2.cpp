@@ -112,7 +112,10 @@ int isNumber(const string &str)
     else if (str.find_first_not_of(".0123456789") == string::npos)
     {
         // cout << "Input is float." << endl << endl;
-        return 1;   // if float return 1
+        if (str.find_first_of('.') == str.find_last_of('.'))
+            return 1;   // if float return 1
+        else
+            return -1;
     }
     else
     {
