@@ -3,42 +3,88 @@
 #include <cmath>
 using namespace std;
 
-int StoI(char *str)
+class DepositException
 {
-    int len = strlen(str);
-    int num = 0;
-
-    for (int i = 0; i < len; i++)
+private:
+    int reqDep; // 요청 입금액
+public:
+    DepositException(int money): reqDep(money)
+    { }
+    void ShowExceptionReason()
     {
-        if (str[i] < '0' || str[i]>'9')
-            throw str[i];
-
-        num += (int)(pow((double)10, (len - 1) - i) * (str[i] + (7 - '7')));
+        cout << "[예외 메시지: " << reqDep << "는 입금불가]" << endl;
     }
-    return num;
-}
+};
+
+class WithdrawException
+{
+private:
+    int balance; // 잔고
+public:
+    WithdrawException(int money): balance(money)
+    { }
+    void ShowExceptionReason()
+    {
+        cout << "[예외 메시지: 잔액 " << balance << ", 잔액부족]" << endl;
+    }
+};
+
+class Account
+{
+private:
+    char accNum[50]; // 계좌번호
+    int balance; // 잔고
+public:
+    Account(char *acc, int money): balance(money)
+    {
+        strcpy(accNum, acc);
+    }
+    void Deposit(int money) //throw (DepositException)
+    {
+        if (money < 0)
+        {
+            DepositException expn(money);
+            throw expn;
+        }
+        balance += money;
+    }
+    void Withdraw(int money) //throw (WithdrawException)
+    {
+        if (money > balance)
+            throw WithdrawException(balance);
+        balance -= money;
+    }
+    void ShowMyMoney()
+    {
+        cout << "잔고: " << balance << endl << endl;
+    }
+};
 
 int main(void)
 {
-    char str1[100];
-    char str2[200];
+    Account myAcc("56789-827120", 5000);
 
-    while (1)
+    try
     {
-        cout << "두 개의 숫자 입력: ";
-        cin >> str1 >> str2;
-
-        try
-        {
-            cout << str1 << " + " << str2 << " = " << StoI(str1) + StoI(str2) << endl;
-            break;
-        }
-        catch (char ch)
-        {
-            cout << "문자 " << ch << "가 입력되었습니다." << endl;
-            cout << "재입력 진행합니다." << endl << endl;
-        }
+        myAcc.Deposit(2000);
+        myAcc.Deposit(-300);
     }
-    cout << "프로그램을 종료합니다." << endl;
+    catch (DepositException &expn)
+    {
+        expn.ShowExceptionReason();
+    }
+    myAcc.ShowMyMoney();
+
+    try
+    {
+        myAcc.Withdraw(3500);
+        myAcc.Withdraw(4500);
+    }
+    catch (WithdrawException &expn)
+    {
+        expn.ShowExceptionReason();
+    }
+    myAcc.ShowMyMoney();
+
     return 0;
 }
