@@ -7,47 +7,33 @@
 
 using namespace std;
 
-template <typename T1, typename T2>
-void GetArea()
-{
-    T1 w;
-    T2 h;
-    cout << "사각형의 넓이를 구하시오." << endl;
-    cout << "A: ";
-    cin >> w;
-    cout << "B: ";
-    cin >> h;
-    cout << w * h;
-}
-// template<>
-// char *GetArea(char *a, char *b)
-// {
-//     cout;
-// }
+// Function Declarations
+int isNumber(const string &str);
 
-/// Checks if input string is an integer, float, or char/string
-/// @param str input string
-/// @retval 0 if int
-/// @retval 1 if float
-/// @retval -1 if char/string
-int isNumber(const string &str)
+template <typename T>
+class Rect
 {
-    if (str.find_first_not_of("0123456789") == string::npos)
+public:
+    Rect(T x = 0, T y = 0): width(x), height(y)
+    { }
+
+    void SetWidth(T x)
     {
-        // cout << "Input is int." << endl << endl;
-        return 0;   // if int return 0
+        width = x;
     }
-    else if (str.find_first_not_of(".0123456789") == string::npos)
+    void SetHeight(T y)
     {
-        // cout << "Input is float." << endl << endl;
-        return 1;   // if float return 1
+        height = y;
     }
-    else
+    T GetArea()
     {
-        // cout << "Input is not a number." << endl << endl;
-        return -1;  // if char/string return -1
+        return height * width;
     }
-}
+
+private:
+    T width;
+    T height;
+};
 
 int main(void)
 {
@@ -80,17 +66,41 @@ int main(void)
         }
     } while (isNum == false);
 
-    // define variable A with correct type
-    if (typeA == 0)
-        int A = stoi(strA);
-    else    // typeA == 1 (float)
-        float A = stof(strA);
-
-    // define variable B with correct type
-    if (typeB == 0)
-        int B = stoi(strB);
-    else    // typeA == 1 (float)
-        float B = stof(strB);
+    // define Rect r1 with correct type
+    if (typeA == 0 && typeB == 0)
+    {
+        Rect <int>r1(stoi(strA), stoi(strB));
+        cout << "Area of Rectangle: " << r1.GetArea() << endl;
+    }
+    else    // type == 1 (float)
+    {
+        Rect <float>r1(stof(strA), stof(strB));
+        cout << "Area of Rectangle: " << r1.GetArea() << endl;
+    }
 
     return 0;
+}
+
+/// Checks if input string is an integer, float, or char/string
+/// @param str input string
+/// @returns 0 if int, 1 if float, -1 if char/string
+int isNumber(const string &str)
+{
+    // if no non-number found
+    if (str.find_first_not_of("0123456789") == string::npos)
+    {
+        // cout << "Input is int." << endl << endl;
+        return 0;   // if int return 0
+    }
+    // if no non-number & '.' found
+    else if (str.find_first_not_of(".0123456789") == string::npos)
+    {
+        // cout << "Input is float." << endl << endl;
+        return 1;   // if float return 1
+    }
+    else
+    {
+        // cout << "Input is not a number." << endl << endl;
+        return -1;  // if char/string return -1
+    }
 }
