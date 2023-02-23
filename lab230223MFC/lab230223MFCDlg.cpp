@@ -52,6 +52,8 @@ END_MESSAGE_MAP()
 
 Clab230223MFCDlg::Clab230223MFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_LAB230223MFC_DIALOG, pParent)
+	, m_box1(_T(""))
+	, m_box2(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,12 +61,15 @@ Clab230223MFCDlg::Clab230223MFCDlg(CWnd* pParent /*=nullptr*/)
 void Clab230223MFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT1, m_box1);
+	DDX_Text(pDX, IDC_EDIT2, m_box2);
 }
 
 BEGIN_MESSAGE_MAP(Clab230223MFCDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, &Clab230223MFCDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -153,3 +158,21 @@ HCURSOR Clab230223MFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void Clab230223MFCDlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+	UpdateData(1);
+	int boxchk = m_box1.GetLength();
+	if (boxchk == 0)
+	{
+		MessageBox(L"Edit Box is Empty.");
+	}
+	else
+	{
+		m_box2 = m_box1;
+		UpdateData(0);
+		MessageBox(m_box2 + "\n Added Message.");
+	}
+}
