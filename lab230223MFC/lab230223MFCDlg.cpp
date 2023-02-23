@@ -15,7 +15,7 @@
 
 // CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialogEx
+class CAboutDlg: public CDialogEx
 {
 public:
 	CAboutDlg();
@@ -25,19 +25,19 @@ public:
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
+	virtual void DoDataExchange(CDataExchange *pDX);    // DDX/DDV support
 
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
+CAboutDlg::CAboutDlg(): CDialogEx(IDD_ABOUTBOX)
 {
 }
 
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+void CAboutDlg::DoDataExchange(CDataExchange *pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
@@ -50,26 +50,39 @@ END_MESSAGE_MAP()
 
 
 
-Clab230223MFCDlg::Clab230223MFCDlg(CWnd* pParent /*=nullptr*/)
+Clab230223MFCDlg::Clab230223MFCDlg(CWnd *pParent /*=nullptr*/)
 	: CDialogEx(IDD_LAB230223MFC_DIALOG, pParent)
-	, m_box1(_T(""))
-	, m_box2(_T(""))
+	, m_upper(_T(""))
+	, m_lower(_T("0"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void Clab230223MFCDlg::DoDataExchange(CDataExchange* pDX)
+void Clab230223MFCDlg::DoDataExchange(CDataExchange *pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT1, m_box1);
-	DDX_Text(pDX, IDC_EDIT2, m_box2);
+	DDX_Text(pDX, IDC_EDITUPPER, m_upper);
+	DDX_Text(pDX, IDC_EDITINPUT, m_lower);
 }
 
 BEGIN_MESSAGE_MAP(Clab230223MFCDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &Clab230223MFCDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_NUM0, &Clab230223MFCDlg::OnBnClickedNum0)
+	ON_BN_CLICKED(IDC_NUM1, &Clab230223MFCDlg::OnBnClickedNum1)
+	ON_BN_CLICKED(IDC_NUM2, &Clab230223MFCDlg::OnBnClickedNum2)
+	ON_BN_CLICKED(IDC_NUM3, &Clab230223MFCDlg::OnBnClickedNum3)
+	ON_BN_CLICKED(IDC_NUM4, &Clab230223MFCDlg::OnBnClickedNum4)
+	ON_BN_CLICKED(IDC_NUM5, &Clab230223MFCDlg::OnBnClickedNum5)
+	ON_BN_CLICKED(IDC_NUM6, &Clab230223MFCDlg::OnBnClickedNum6)
+	ON_BN_CLICKED(IDC_NUM7, &Clab230223MFCDlg::OnBnClickedNum7)
+	ON_BN_CLICKED(IDC_NUM8, &Clab230223MFCDlg::OnBnClickedNum8)
+	ON_BN_CLICKED(IDC_NUM9, &Clab230223MFCDlg::OnBnClickedNum9)
+	ON_BN_CLICKED(IDC_BTNDEL, &Clab230223MFCDlg::OnBnClickedBtndel)
+	ON_BN_CLICKED(IDC_CE, &Clab230223MFCDlg::OnBnClickedCe)
+	ON_BN_CLICKED(IDC_NUMNEG, &Clab230223MFCDlg::OnBnClickedNumneg)
+	ON_BN_CLICKED(IDC_CLEAR, &Clab230223MFCDlg::OnBnClickedClear)
 END_MESSAGE_MAP()
 
 
@@ -85,7 +98,7 @@ BOOL Clab230223MFCDlg::OnInitDialog()
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	CMenu *pSysMenu = GetSystemMenu(FALSE);
 	if (pSysMenu != nullptr)
 	{
 		BOOL bNameValid;
@@ -159,20 +172,199 @@ HCURSOR Clab230223MFCDlg::OnQueryDragIcon()
 }
 
 
-
-void Clab230223MFCDlg::OnBnClickedButton1()
+void Clab230223MFCDlg::OnBnClickedNum0()
 {
 	// TODO: Add your control notification handler code here
-	UpdateData(1);
-	int boxchk = m_box1.GetLength();
-	if (boxchk == 0)
+	if (m_lower == "0")
 	{
-		MessageBox(L"Edit Box is Empty.");
+		m_lower = "0";
 	}
 	else
 	{
-		m_box2 = m_box1;
-		UpdateData(0);
-		MessageBox(m_box2 + "\n Added Message.");
+		m_lower = m_lower + '0';
 	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum1()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "1";
+	}
+	else
+	{
+		m_lower = m_lower + '1';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum2()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "2";
+	}
+	else
+	{
+		m_lower = m_lower + '2';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum3()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "3";
+	}
+	else
+	{
+		m_lower = m_lower + '3';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum4()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "4";
+	}
+	else
+	{
+		m_lower = m_lower + '4';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum5()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "5";
+	}
+	else
+	{
+		m_lower = m_lower + '5';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum6()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "6";
+	}
+	else
+	{
+		m_lower = m_lower + '6';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum7()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "7";
+	}
+	else
+	{
+		m_lower = m_lower + '7';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum8()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "8";
+	}
+	else
+	{
+		m_lower = m_lower + '8';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNum9()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		m_lower = "9";
+	}
+	else
+	{
+		m_lower = m_lower + '9';
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtndel()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower == "0")
+	{
+		return;
+	}
+	else
+	{
+		m_lower.Truncate(m_lower.GetLength() - 1);
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedCe()
+{
+	// TODO: Add your control notification handler code here
+	m_lower = "0";
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedNumneg()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower[0] != '-')
+	{
+		//m_lower = '-' + m_lower;
+		m_lower.Insert(0, '-');
+	}
+	else
+	{
+		m_lower.Remove('-');
+	}
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedClear()
+{
+	// TODO: Add your control notification handler code here
+	m_upper = "";
+	m_lower = "";
+	UpdateData(0);
 }
