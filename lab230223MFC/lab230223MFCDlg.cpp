@@ -392,6 +392,21 @@ void Clab230223MFCDlg::OnBnClickedNum9()
 }
 
 
+void Clab230223MFCDlg::OnBnClickedNumneg()
+{
+	// TODO: Add your control notification handler code here
+	if (m_lower[0] != '-')
+	{
+		//m_lower = '-' + m_lower;
+		m_lower.Insert(0, '-');
+	}
+	else
+	{
+		m_lower.Remove('-');
+	}
+	UpdateData(0);
+}
+
 void Clab230223MFCDlg::OnBnClickedBtndel()
 {
 	// TODO: Add your control notification handler code here
@@ -415,21 +430,6 @@ void Clab230223MFCDlg::OnBnClickedCe()
 }
 
 
-void Clab230223MFCDlg::OnBnClickedNumneg()
-{
-	// TODO: Add your control notification handler code here
-	if (m_lower[0] != '-')
-	{
-		//m_lower = '-' + m_lower;
-		m_lower.Insert(0, '-');
-	}
-	else
-	{
-		m_lower.Remove('-');
-	}
-	UpdateData(0);
-}
-
 
 void Clab230223MFCDlg::OnBnClickedClear()
 {
@@ -446,49 +446,45 @@ void Clab230223MFCDlg::OnBnClickedClear()
 
 void Clab230223MFCDlg::OnBnClickedBtnequals()
 {
-	int temp_operand;
 	// TODO: Add your control notification handler code here
+	int temp_operand;
+	if (!m_opDone)
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 	if (m_operator == 1)	// plus
 	{
-		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 		m_result = m_operand1 + m_operand2;
-		//m_upper = m_upper + ' ' + m_lower + L" =";
 		m_upper.Format(L"%d + %d =", m_operand1, m_operand2);
 		m_lower.Format(L"%d", m_result);
-		//m_operand1 = m_result;	// consecutive operations not yet possible
 	}
 	else if (m_operator == 2)
 	{
-		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 		m_result = m_operand1 - m_operand2;
 		m_upper.Format(L"%d - %d =", m_operand1, m_operand2);
 		m_lower.Format(L"%d", m_result);
 	}
 	else if (m_operator == 3)
 	{
-		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 		m_result = m_operand1 * m_operand2;
 		m_upper.Format(L"%d x %d =", m_operand1, m_operand2);
 		m_lower.Format(L"%d", m_result);
 	}
 	else if (m_operator == 4)
 	{
-		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 		m_result = m_operand1 / m_operand2;
 		m_upper.Format(L"%d / %d =", m_operand1, m_operand2);
 		m_lower.Format(L"%d", m_result);
 	}
 	else if (m_operator == 5)
 	{
-		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
 		m_result = m_operand1 % m_operand2;
 		m_upper.Format(L"%d %% %d =", m_operand1, m_operand2);
 		m_lower.Format(L"%d", m_result);
 	}
 	else if (m_operator == 0)
 	{
-		m_result = m_operand1;
+		m_upper = m_lower + L" =";
 	}
+	m_operand1 = m_result;		// for consecutive operation
 	m_opDone = true;
 	UpdateData(0);
 }
