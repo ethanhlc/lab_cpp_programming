@@ -50,4 +50,16 @@ public:
 	afx_msg void OnBnClickedCe();
 	afx_msg void OnBnClickedNumneg();
 	afx_msg void OnBnClickedClear();
+	afx_msg void OnBnClickedBtnequals();
+	afx_msg void OnBnClickedBtnplus();
+	afx_msg void OnBnClickedBtnminus();
+	afx_msg void OnBnClickedBtnmul();
+	afx_msg void OnBnClickedBtndiv();
+	afx_msg void OnBnClickedBtnmod();
+private:
+	int m_operand1;
+	int m_operand2;
+	int m_operator;	// 1-plus, 2-minus, 3-multi, 4-div, 5-modulo
+	int m_result;
+	bool m_opDone;
 };

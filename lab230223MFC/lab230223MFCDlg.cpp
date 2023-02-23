@@ -12,7 +12,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg: public CDialogEx
@@ -56,6 +55,11 @@ Clab230223MFCDlg::Clab230223MFCDlg(CWnd *pParent /*=nullptr*/)
 	, m_lower(_T("0"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_operand1 = 0;
+	m_operand2 = 0;
+	m_operator = 0;
+	m_result = 0;
+	m_opDone = false;
 }
 
 void Clab230223MFCDlg::DoDataExchange(CDataExchange *pDX)
@@ -83,6 +87,12 @@ BEGIN_MESSAGE_MAP(Clab230223MFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CE, &Clab230223MFCDlg::OnBnClickedCe)
 	ON_BN_CLICKED(IDC_NUMNEG, &Clab230223MFCDlg::OnBnClickedNumneg)
 	ON_BN_CLICKED(IDC_CLEAR, &Clab230223MFCDlg::OnBnClickedClear)
+	ON_BN_CLICKED(IDC_BTNPLUS, &Clab230223MFCDlg::OnBnClickedBtnplus)
+	ON_BN_CLICKED(IDC_BTNEQUALS, &Clab230223MFCDlg::OnBnClickedBtnequals)
+	ON_BN_CLICKED(IDC_BTNMINUS, &Clab230223MFCDlg::OnBnClickedBtnminus)
+	ON_BN_CLICKED(IDC_BTNMUL, &Clab230223MFCDlg::OnBnClickedBtnmul)
+	ON_BN_CLICKED(IDC_BTNDIV, &Clab230223MFCDlg::OnBnClickedBtndiv)
+	ON_BN_CLICKED(IDC_BTNMOD, &Clab230223MFCDlg::OnBnClickedBtnmod)
 END_MESSAGE_MAP()
 
 
@@ -175,7 +185,13 @@ HCURSOR Clab230223MFCDlg::OnQueryDragIcon()
 void Clab230223MFCDlg::OnBnClickedNum0()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "0";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "0";
 	}
@@ -190,7 +206,13 @@ void Clab230223MFCDlg::OnBnClickedNum0()
 void Clab230223MFCDlg::OnBnClickedNum1()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "1";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "1";
 	}
@@ -205,7 +227,13 @@ void Clab230223MFCDlg::OnBnClickedNum1()
 void Clab230223MFCDlg::OnBnClickedNum2()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "2";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "2";
 	}
@@ -220,7 +248,13 @@ void Clab230223MFCDlg::OnBnClickedNum2()
 void Clab230223MFCDlg::OnBnClickedNum3()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "3";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "3";
 	}
@@ -235,7 +269,13 @@ void Clab230223MFCDlg::OnBnClickedNum3()
 void Clab230223MFCDlg::OnBnClickedNum4()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "4";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "4";
 	}
@@ -250,7 +290,13 @@ void Clab230223MFCDlg::OnBnClickedNum4()
 void Clab230223MFCDlg::OnBnClickedNum5()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "5";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "5";
 	}
@@ -265,7 +311,13 @@ void Clab230223MFCDlg::OnBnClickedNum5()
 void Clab230223MFCDlg::OnBnClickedNum6()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "6";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "6";
 	}
@@ -280,7 +332,13 @@ void Clab230223MFCDlg::OnBnClickedNum6()
 void Clab230223MFCDlg::OnBnClickedNum7()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "7";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "7";
 	}
@@ -295,7 +353,13 @@ void Clab230223MFCDlg::OnBnClickedNum7()
 void Clab230223MFCDlg::OnBnClickedNum8()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "8";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "8";
 	}
@@ -310,7 +374,13 @@ void Clab230223MFCDlg::OnBnClickedNum8()
 void Clab230223MFCDlg::OnBnClickedNum9()
 {
 	// TODO: Add your control notification handler code here
-	if (m_lower == "0")
+	if (m_opDone)
+	{
+		m_lower = "9";
+		m_upper = "";
+		m_opDone = false;
+	}
+	else if (m_lower == "0")
 	{
 		m_lower = "9";
 	}
@@ -365,6 +435,120 @@ void Clab230223MFCDlg::OnBnClickedClear()
 {
 	// TODO: Add your control notification handler code here
 	m_upper = "";
-	m_lower = "";
+	m_lower = "0";
+	m_operand1 = 0;
+	m_operand2 = 0;
+	m_operator = 0;
+	m_opDone = false;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtnequals()
+{
+	int temp_operand;
+	// TODO: Add your control notification handler code here
+	if (m_operator == 1)	// plus
+	{
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
+		m_result = m_operand1 + m_operand2;
+		//m_upper = m_upper + ' ' + m_lower + L" =";
+		m_upper.Format(L"%d + %d =", m_operand1, m_operand2);
+		m_lower.Format(L"%d", m_result);
+		//m_operand1 = m_result;	// consecutive operations not yet possible
+	}
+	else if (m_operator == 2)
+	{
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
+		m_result = m_operand1 - m_operand2;
+		m_upper.Format(L"%d - %d =", m_operand1, m_operand2);
+		m_lower.Format(L"%d", m_result);
+	}
+	else if (m_operator == 3)
+	{
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
+		m_result = m_operand1 * m_operand2;
+		m_upper.Format(L"%d x %d =", m_operand1, m_operand2);
+		m_lower.Format(L"%d", m_result);
+	}
+	else if (m_operator == 4)
+	{
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
+		m_result = m_operand1 / m_operand2;
+		m_upper.Format(L"%d / %d =", m_operand1, m_operand2);
+		m_lower.Format(L"%d", m_result);
+	}
+	else if (m_operator == 5)
+	{
+		m_operand2 = GetDlgItemInt(IDC_EDITINPUT);
+		m_result = m_operand1 % m_operand2;
+		m_upper.Format(L"%d %% %d =", m_operand1, m_operand2);
+		m_lower.Format(L"%d", m_result);
+	}
+	else if (m_operator == 0)
+	{
+		m_result = m_operand1;
+	}
+	m_opDone = true;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtnplus()
+{
+	// TODO: Add your control notification handler code here
+	m_operand1 = GetDlgItemInt(IDC_EDITINPUT);
+	m_operator = 1;
+	m_upper = m_lower + L" +";
+	m_lower = "0";
+	m_opDone = false;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtnminus()
+{
+	// TODO: Add your control notification handler code here
+	m_operand1 = GetDlgItemInt(IDC_EDITINPUT);
+	m_operator = 2;
+	m_upper = m_lower + L" -";
+	m_lower = "0";
+	m_opDone = false;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtnmul()
+{
+	// TODO: Add your control notification handler code here
+	m_operand1 = GetDlgItemInt(IDC_EDITINPUT);
+	m_operator = 3;
+	m_upper = m_lower + L" x";
+	m_lower = "0";
+	m_opDone = false;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtndiv()
+{
+	// TODO: Add your control notification handler code here
+	m_operand1 = GetDlgItemInt(IDC_EDITINPUT);
+	m_operator = 4;
+	m_upper = m_lower + L" /";
+	m_lower = "0";
+	m_opDone = false;
+	UpdateData(0);
+}
+
+
+void Clab230223MFCDlg::OnBnClickedBtnmod()
+{
+	// TODO: Add your control notification handler code here
+	m_operand1 = GetDlgItemInt(IDC_EDITINPUT);
+	m_operator = 5;
+	m_upper = m_lower + L" %";
+	m_lower = "0";
+	m_opDone = false;
 	UpdateData(0);
 }
