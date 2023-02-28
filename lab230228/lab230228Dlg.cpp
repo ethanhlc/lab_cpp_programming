@@ -12,7 +12,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -52,6 +51,7 @@ END_MESSAGE_MAP()
 
 Clab230228Dlg::Clab230228Dlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_LAB230228_DIALOG, pParent)
+	, m_editBox1(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -59,6 +59,7 @@ Clab230228Dlg::Clab230228Dlg(CWnd* pParent /*=nullptr*/)
 void Clab230228Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT1, m_editBox1);
 }
 
 BEGIN_MESSAGE_MAP(Clab230228Dlg, CDialogEx)
@@ -67,6 +68,9 @@ BEGIN_MESSAGE_MAP(Clab230228Dlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
+	ON_WM_LBUTTONDBLCLK()
+//	ON_WM_MOUSEHOVER()
+ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -175,4 +179,40 @@ void Clab230228Dlg::OnDestroy()
 
 	// TODO: Add your message handler code here
 	AfxMessageBox(L"Window Destroyed.", MB_YESNOCANCEL | MB_ICONSTOP);
+}
+
+
+void Clab230228Dlg::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	//AfxMessageBox(L"L Button Double Click.");
+	m_editBox1 = L"Mouse Double Click";
+	UpdateData(0);
+
+	CDialogEx::OnLButtonDblClk(nFlags, point);
+}
+
+
+//void Clab230228Dlg::OnMouseHover(UINT nFlags, CPoint point)
+//{
+//	// TODO: Add your message handler code here and/or call default
+//	m_editBox1 = L"Mouse Hover";
+//	UpdateData(0);
+//
+//	CDialogEx::OnMouseHover(nFlags, point);
+//}
+
+
+BOOL Clab230228Dlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: Add your message handler code here and/or call default
+	CString swheelTxt;
+	if (zDelta > 0)
+		swheelTxt = L"Mouse Wheel Up";
+	else
+		swheelTxt = L"Mouse Wheel Down";
+	m_editBox1.Format(L"%s: %d, %d", swheelTxt, pt.x, pt.y);
+	UpdateData(0);
+
+	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }

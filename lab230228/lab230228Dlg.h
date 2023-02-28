@@ -34,4 +34,8 @@ protected:
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	CString m_editBox1;
+//	afx_msg void OnMouseHover(UINT nFlags, CPoint point);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
