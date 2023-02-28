@@ -32,19 +32,19 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	CString m_sTimer;
+	CString m_sLaps;
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	CString m_sTimer;
-private:
-	bool m_bRun;
-	bool m_bReset;
-public:
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
+//	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedReset();
 	afx_msg void OnBnClickedLap();
+private:
+	bool m_bRun;
+	bool m_bReset;
 };

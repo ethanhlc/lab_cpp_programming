@@ -53,14 +53,18 @@ END_MESSAGE_MAP()
 Clab230228StopwatchDlg::Clab230228StopwatchDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_LAB230228STOPWATCH_DIALOG, pParent)
 	, m_sTimer(_T(""))
+	, m_sLaps(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_bReset = false;
+	m_bRun = false;
 }
 
 void Clab230228StopwatchDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_TIMER, m_sTimer);
+	DDX_Text(pDX, IDC_LAPS, m_sLaps);
 }
 
 BEGIN_MESSAGE_MAP(Clab230228StopwatchDlg, CDialogEx)
@@ -70,10 +74,10 @@ BEGIN_MESSAGE_MAP(Clab230228StopwatchDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_RBUTTONDOWN()
-	ON_WM_KEYDOWN()
+	ON_WM_MBUTTONDOWN()
+//	ON_WM_KEYDOWN()
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
-	ON_WM_CHAR()
 	ON_BN_CLICKED(IDC_START, &Clab230228StopwatchDlg::OnBnClickedStart)
 	ON_BN_CLICKED(IDC_RESET, &Clab230228StopwatchDlg::OnBnClickedReset)
 	ON_BN_CLICKED(IDC_LAP, &Clab230228StopwatchDlg::OnBnClickedLap)
@@ -196,6 +200,7 @@ void Clab230228StopwatchDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	// TODO: Add your message handler code here
+	KillTimer(1);
 }
 
 
@@ -213,7 +218,6 @@ void Clab230228StopwatchDlg::OnTimer(UINT_PTR nIDEvent)
 		minutes = 0;
 	}
 
-	CString timer;
 	if (++subSec > 99)
 	{
 		subSec = 0;
@@ -225,8 +229,11 @@ void Clab230228StopwatchDlg::OnTimer(UINT_PTR nIDEvent)
 		minutes++;
 	}
 
-	timer.Format(L"%02d:%02d.%02d", minutes, seconds, subSec);
-	SetDlgItemText(IDC_TIMER, timer);
+	//CString timer;
+	//timer.Format(L"%02d:%02d.%02d", minutes, seconds, subSec);
+	//SetDlgItemText(IDC_TIMER, timer);
+	m_sTimer.Format(L"%02d:%02d.%02d", minutes, seconds, subSec);
+	UpdateData(0);
 
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -256,6 +263,10 @@ void Clab230228StopwatchDlg::OnLButtonDown(UINT nFlags, CPoint point)
 void Clab230228StopwatchDlg::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
+	// if already reset, do nothing
+	if (m_sTimer == L"00:00.00")
+		return;
+
 	int retval = AfxMessageBox(L"타이머를 초기화 하시겠습니까?", MB_YESNO | MB_ICONEXCLAMATION);
 	if (retval == IDYES)
 	{
@@ -279,26 +290,30 @@ void Clab230228StopwatchDlg::OnRButtonDown(UINT nFlags, CPoint point)
 }
 
 
-void Clab230228StopwatchDlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+void Clab230228StopwatchDlg::OnMButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	CString ch;
-	ch.Format(L"%d", nChar);
-	AfxMessageBox(ch);
+	if (m_bRun)
+	{
+		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
+		UpdateData(0);
+	}
 
-	CDialogEx::OnKeyDown(nChar, nRepCnt, nFlags);
+	CDialogEx::OnMButtonDown(nFlags, point);
 }
 
 
-void Clab230228StopwatchDlg::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	// TODO: Add your message handler code here and/or call default
-	CString ch;
-	ch.Format(L"%d", nChar);
-	AfxMessageBox(ch);
-
-	CDialogEx::OnChar(nChar, nRepCnt, nFlags);
-}
+//void Clab230228StopwatchDlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+//{
+//	// TODO: Add your message handler code here and/or call default
+//
+//	// NOT WORKING DUE TO EDITBOX
+//	CString ch;
+//	ch.Format(L"%d", nChar);
+//	AfxMessageBox(ch);
+//
+//	CDialogEx::OnKeyDown(nChar, nRepCnt, nFlags);
+//}
 
 
 void Clab230228StopwatchDlg::OnBnClickedStart()
@@ -331,6 +346,7 @@ void Clab230228StopwatchDlg::OnBnClickedReset()
 		KillTimer(1);
 		m_sTimer = L"00:00.00";
 		GetDlgItem(IDC_START)->SetWindowTextW(L"START");
+		m_sLaps = "";
 		m_bRun = false;
 		m_bReset = true;
 		UpdateData(0);
@@ -347,4 +363,9 @@ void Clab230228StopwatchDlg::OnBnClickedReset()
 void Clab230228StopwatchDlg::OnBnClickedLap()
 {
 	// TODO: Add your control notification handler code here
+	if (m_bRun)
+	{
+		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
+		UpdateData(0);
+	}
 }
