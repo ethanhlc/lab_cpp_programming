@@ -1,0 +1,13 @@
+diff a/lab230228/lab230228Dlg.cpp b/lab230228/lab230228Dlg.cpp	(rejected hunks)
+@@ -246,9 +246,9 @@
+ 	// TODO: Add your message handler code here and/or call default
+ 	m_bDate = !m_bDate;
+ 	if(m_bDate == true)
+-		AfxMessageBox(L"��¥ ǥ��");
++		AfxMessageBox(L"��¥ ǥ��", MB_ICONASTERISK);
+ 	else
+-		AfxMessageBox(L"��¥ ��ǥ��");
++		AfxMessageBox(L"��¥ ��ǥ��", MB_ICONASTERISK);
+ 
+ 	CDialogEx::OnLButtonDown(nFlags, point);
+ }
