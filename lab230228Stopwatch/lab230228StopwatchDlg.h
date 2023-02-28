@@ -42,4 +42,9 @@ public:
 private:
 	bool m_bRun;
 	bool m_bReset;
+public:
+	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnBnClickedStart();
+	afx_msg void OnBnClickedReset();
+	afx_msg void OnBnClickedLap();
 };
