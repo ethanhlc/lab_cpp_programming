@@ -46,9 +46,9 @@ public:
 	afx_msg void OnBnClickedNum7();
 	afx_msg void OnBnClickedNum8();
 	afx_msg void OnBnClickedNum9();
+	afx_msg void OnBnClickedNumneg();
 	afx_msg void OnBnClickedBtndel();
 	afx_msg void OnBnClickedCe();
-	afx_msg void OnBnClickedNumneg();
 	afx_msg void OnBnClickedClear();
 	afx_msg void OnBnClickedBtnequals();
 	afx_msg void OnBnClickedBtnplus();
