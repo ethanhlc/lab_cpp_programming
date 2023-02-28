@@ -65,6 +65,8 @@ BEGIN_MESSAGE_MAP(Clab230228Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_CREATE()
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -153,3 +155,24 @@ HCURSOR Clab230228Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+int Clab230228Dlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  Add your specialized creation code here
+	AfxMessageBox(L"윈도우가 생성되었습니다.", MB_OK | MB_ICONASTERISK);
+
+	return 0;
+}
+
+
+void Clab230228Dlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: Add your message handler code here
+	AfxMessageBox(L"Window Destroyed.", MB_YESNOCANCEL | MB_ICONSTOP);
+}
