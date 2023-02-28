@@ -54,6 +54,7 @@ Clab230228Dlg::Clab230228Dlg(CWnd* pParent /*=nullptr*/)
 	, m_editBox1(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_bDate = true;
 }
 
 void Clab230228Dlg::DoDataExchange(CDataExchange* pDX)
@@ -71,6 +72,9 @@ BEGIN_MESSAGE_MAP(Clab230228Dlg, CDialogEx)
 	ON_WM_LBUTTONDBLCLK()
 //	ON_WM_MOUSEHOVER()
 ON_WM_MOUSEWHEEL()
+ON_WM_TIMER()
+ON_WM_RBUTTONDBLCLK()
+ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -193,26 +197,58 @@ void Clab230228Dlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 }
 
 
-//void Clab230228Dlg::OnMouseHover(UINT nFlags, CPoint point)
-//{
-//	// TODO: Add your message handler code here and/or call default
-//	m_editBox1 = L"Mouse Hover";
-//	UpdateData(0);
-//
-//	CDialogEx::OnMouseHover(nFlags, point);
-//}
-
-
 BOOL Clab230228Dlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: Add your message handler code here and/or call default
-	CString swheelTxt;
+	CString sWheelTxt;
 	if (zDelta > 0)
-		swheelTxt = L"Mouse Wheel Up";
+		sWheelTxt = L"Mouse Wheel Up";
 	else
-		swheelTxt = L"Mouse Wheel Down";
-	m_editBox1.Format(L"%s: %d, %d", swheelTxt, pt.x, pt.y);
+		sWheelTxt = L"Mouse Wheel Down";
+	m_editBox1.Format(L"%s: %d, %d", sWheelTxt.GetString(), pt.x, pt.y);
 	UpdateData(0);
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+
+void Clab230228Dlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	CTime time;
+	time = CTime::GetCurrentTime();
+
+	CString str_time, str_date;
+	str_date.Format(L"%4d년 %d월 %d일 ", time.GetYear(), time.GetMonth(), time.GetDay());
+	str_time.Format(L"%02d:%02d:%02d", time.GetHour(), time.GetMinute(), time.GetSecond());
+
+	if(m_bDate == true)
+		SetDlgItemText(IDC_EDIT1, str_date + str_time);
+	else
+		SetDlgItemText(IDC_EDIT1, str_time);
+
+	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void Clab230228Dlg::OnRButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	SetTimer(1, 1000, NULL);
+	AfxMessageBox(L"Timer Created");
+
+	CDialogEx::OnRButtonDblClk(nFlags, point);
+}
+
+
+void Clab230228Dlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	m_bDate = !m_bDate;
+	if(m_bDate == true)
+		AfxMessageBox(L"날짜 표시");
+	else
+		AfxMessageBox(L"날짜 미표시");
+
+	CDialogEx::OnLButtonDown(nFlags, point);
 }
