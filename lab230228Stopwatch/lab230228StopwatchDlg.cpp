@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(Clab230228StopwatchDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START, &Clab230228StopwatchDlg::OnBnClickedStart)
 	ON_BN_CLICKED(IDC_RESET, &Clab230228StopwatchDlg::OnBnClickedReset)
 	ON_BN_CLICKED(IDC_LAP, &Clab230228StopwatchDlg::OnBnClickedLap)
+	ON_BN_CLICKED(IDC_SAVE, &Clab230228StopwatchDlg::OnBnClickedSave)
 END_MESSAGE_MAP()
 
 
@@ -338,6 +339,9 @@ void Clab230228StopwatchDlg::OnBnClickedStart()
 void Clab230228StopwatchDlg::OnBnClickedReset()
 {
 	// TODO: Add your control notification handler code here
+	// if already reset, do nothing
+	if (m_sTimer == L"00:00.00")
+		return;
 	int retval = AfxMessageBox(L"타이머를 초기화 하시겠습니까?", MB_YESNO | MB_ICONEXCLAMATION);
 	if (retval == IDYES)
 	{
@@ -365,7 +369,24 @@ void Clab230228StopwatchDlg::OnBnClickedLap()
 	// TODO: Add your control notification handler code here
 	if (m_bRun)
 	{
-		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
+		m_sLaps = m_sLaps + m_sTimer + L"\n";
 		UpdateData(0);
 	}
+}
+
+
+void Clab230228StopwatchDlg::OnBnClickedSave()
+{
+	// TODO: Add your control notification handler code here
+	//CFile file;
+	CStdioFile file;
+
+	// if file open failed
+	if (file.Open(L"laptimes.txt", CFile::modeWrite | CFile::modeCreate) == false)
+		return;
+
+	file.WriteString(m_sLaps);
+	file.Close();
+
+	AfxMessageBox(L"Lap Times Saved", MB_ICONASTERISK);
 }

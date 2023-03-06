@@ -44,6 +44,7 @@ public:
 	afx_msg void OnBnClickedStart();
 	afx_msg void OnBnClickedReset();
 	afx_msg void OnBnClickedLap();
+	afx_msg void OnBnClickedSave();
 private:
 	bool m_bRun;
 	bool m_bReset;

@@ -12,6 +12,7 @@
 #define IDC_START                       1002
 #define IDC_RESET                       1003
 #define IDC_LAP                         1004
+#define IDC_SAVE                        1005
 
 // Next default values for new objects
 // 
