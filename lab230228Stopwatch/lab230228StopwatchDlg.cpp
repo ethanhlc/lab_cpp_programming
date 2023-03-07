@@ -296,7 +296,7 @@ void Clab230228StopwatchDlg::OnMButtonDown(UINT nFlags, CPoint point)
 	// TODO: Add your message handler code here and/or call default
 	if (m_bRun)
 	{
-		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
+		m_sLaps = m_sLaps + m_sTimer + L"\n";
 		UpdateData(0);
 	}
 
@@ -383,7 +383,10 @@ void Clab230228StopwatchDlg::OnBnClickedSave()
 
 	// if file open failed
 	if (file.Open(L"laptimes.txt", CFile::modeWrite | CFile::modeCreate) == false)
+	{
+		AfxMessageBox(L"Could Not Open File", MB_ICONSTOP);
 		return;
+	}
 
 	file.WriteString(m_sLaps);
 	file.Close();
