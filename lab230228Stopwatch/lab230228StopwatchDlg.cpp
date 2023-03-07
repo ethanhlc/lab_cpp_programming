@@ -296,7 +296,7 @@ void Clab230228StopwatchDlg::OnMButtonDown(UINT nFlags, CPoint point)
 	// TODO: Add your message handler code here and/or call default
 	if (m_bRun)
 	{
-		m_sLaps = m_sLaps + m_sTimer + L"\n";
+		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
 		UpdateData(0);
 	}
 
@@ -369,7 +369,7 @@ void Clab230228StopwatchDlg::OnBnClickedLap()
 	// TODO: Add your control notification handler code here
 	if (m_bRun)
 	{
-		m_sLaps = m_sLaps + m_sTimer + L"\n";
+		m_sLaps = m_sLaps + m_sTimer + L"\r\n";
 		UpdateData(0);
 	}
 }
@@ -379,7 +379,7 @@ void Clab230228StopwatchDlg::OnBnClickedSave()
 {
 	// TODO: Add your control notification handler code here
 	//CFile file;
-	CStdioFile file;
+	CFile file;
 
 	// if file open failed
 	if (file.Open(L"laptimes.txt", CFile::modeWrite | CFile::modeCreate) == false)
@@ -388,7 +388,8 @@ void Clab230228StopwatchDlg::OnBnClickedSave()
 		return;
 	}
 
-	file.WriteString(m_sLaps);
+	file.Write(m_sLaps, m_sLaps.GetLength() * 2);
+	//file.WriteString(m_sLaps);
 	file.Close();
 
 	AfxMessageBox(L"Lap Times Saved", MB_ICONASTERISK);
