@@ -35,6 +35,7 @@ public:
 	CListCtrl m_List;
 	CString m_strAge;
 	CString m_strName;
+	afx_msg void OnOK();
 	afx_msg void OnBnClickedButtonAdd();
 	afx_msg void OnBnClickedButtonDel();
 };

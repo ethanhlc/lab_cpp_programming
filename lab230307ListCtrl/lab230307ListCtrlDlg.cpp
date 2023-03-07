@@ -182,6 +182,11 @@ HCURSOR Clab230307ListCtrlDlg::OnQueryDragIcon()
 }
 
 
+void Clab230307ListCtrlDlg::OnOK()
+{
+	OnBnClickedButtonAdd();
+}
+
 
 void Clab230307ListCtrlDlg::OnBnClickedButtonAdd()
 {
@@ -207,7 +212,7 @@ void Clab230307ListCtrlDlg::OnBnClickedButtonAdd()
 	// Add age
 	m_List.SetItemText(nItemNum, 1, age);
 
-	// Reset edit box after adding info to list
+	// Clear edit box after adding info to list
 	m_strName = "";
 	m_strAge = "";
 
