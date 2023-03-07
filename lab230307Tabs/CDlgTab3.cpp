@@ -28,7 +28,15 @@ void CDlgTab3::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CDlgTab3, CDialogEx)
+	ON_BN_CLICKED(IDC_BUTTON1, &CDlgTab3::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
 // CDlgTab3 message handlers
+
+
+void CDlgTab3::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+	AfxMessageBox(L"Tab3 Button");
+}
