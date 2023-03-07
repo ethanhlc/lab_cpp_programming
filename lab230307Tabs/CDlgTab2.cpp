@@ -33,6 +33,10 @@ END_MESSAGE_MAP()
 
 
 // CDlgTab2 message handlers
+void CDlgTab2::OnCancel()
+{
+	;
+}
 
 
 void CDlgTab2::OnBnClickedButton1()
