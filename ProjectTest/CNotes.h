@@ -3,12 +3,10 @@
 
 // CNotes dialog
 
-class CNotes : public CDialogEx
+class CNotes
 {
-	DECLARE_DYNAMIC(CNotes)
 
 public:
-	CNotes(CWnd* pParent = nullptr);   // standard constructor
 	CNotes(int x, int y, int dur);
 	virtual ~CNotes();
 	int x = -1;
@@ -19,13 +17,5 @@ public:
 	int GetNote();
 	int GetDur();
 
-// Dialog Data
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_PROJECTTEST_DIALOG };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-	DECLARE_MESSAGE_MAP()
+	bool operator < (const CNotes& comp) const;
 };

@@ -4,18 +4,10 @@
 #include "pch.h"
 #include "ProjectTest.h"
 #include "CNotes.h"
-#include "afxdialogex.h"
 
 
 // CNotes dialog
 
-IMPLEMENT_DYNAMIC(CNotes, CDialogEx)
-
-CNotes::CNotes(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_PROJECTTEST_DIALOG, pParent)
-{
-
-}
 
 CNotes::~CNotes()
 {
@@ -39,14 +31,7 @@ int CNotes::GetDur()
 	return duration;
 }
 
-void CNotes::DoDataExchange(CDataExchange* pDX)
+bool CNotes::operator<(const CNotes& comp) const
 {
-	CDialogEx::DoDataExchange(pDX);
+	return x < comp.x;
 }
-
-
-BEGIN_MESSAGE_MAP(CNotes, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// CNotes message handlers

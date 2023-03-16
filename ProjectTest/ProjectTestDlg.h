@@ -4,6 +4,9 @@
 
 #pragma once
 
+#include <vector>
+#include <algorithm>
+#include "CNotes.h"
 
 // CProjectTestDlg dialog
 class CProjectTestDlg : public CDialogEx
@@ -45,4 +48,5 @@ public:
 	std::vector<CNotes> m_vctNotes;
 	afx_msg void OnBnClickedBtnList();
 	CString m_NoteList;
+	bool sortFunc(const CNotes& a, const CNotes& b);
 };

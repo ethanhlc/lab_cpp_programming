@@ -7,8 +7,7 @@
 #include "ProjectTestDlg.h"
 #include "afxdialogex.h"
 
-#include <vector>
-#include "CNotes.h"
+//#include <algorithm>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -265,6 +264,7 @@ void CProjectTestDlg::OnBnClickedBnErase()
 {
     // TODO: Add your control notification handler code here
     Invalidate(true);
+    m_vctNotes.clear();
     UpdateData(1);
 }
 
@@ -272,4 +272,20 @@ void CProjectTestDlg::OnBnClickedBnErase()
 void CProjectTestDlg::OnBnClickedBtnList()
 {
     // TODO: Add your control notification handler code here
+    std::sort(m_vctNotes.begin(), m_vctNotes.end());
+
+    m_NoteList = "";
+    CString strF;
+    for (auto& r : m_vctNotes)
+    {
+        strF.Format(_T("Note: %d, Dur: %d\r\n"), r.GetNote(), r.GetDur());
+        m_NoteList += strF;
+    }
+
+    UpdateData(0);
+}
+
+bool CProjectTestDlg::sortFunc(const CNotes& a, const CNotes& b)
+{
+    return a.x > b.x;
 }
