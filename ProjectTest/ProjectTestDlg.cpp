@@ -69,11 +69,17 @@ BEGIN_MESSAGE_MAP(CProjectTestDlg, CDialogEx)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
     ON_WM_LBUTTONDBLCLK()
+
+    ON_MESSAGE(WM_MYCLOSE, &CProjectTestDlg::OnThreadClosed)
+    ON_MESSAGE(WM_MYRECEIVE, &CProjectTestDlg::OnReceive)
+
     ON_BN_CLICKED(IDC_R_HALF, &CProjectTestDlg::OnBnClickedRHalf)
     ON_BN_CLICKED(IDC_R_QUARTER, &CProjectTestDlg::OnBnClickedRQuarter)
     ON_BN_CLICKED(IDC_R_EIGHTH, &CProjectTestDlg::OnBnClickedREighth)
     ON_BN_CLICKED(IDC_BN_ERASE, &CProjectTestDlg::OnBnClickedBnErase)
     ON_BN_CLICKED(IDC_BTN_LIST, &CProjectTestDlg::OnBnClickedBtnList)
+    ON_BN_CLICKED(IDC_BTN_CONNECT, &CProjectTestDlg::OnBnClickedBtnConnect)
+    ON_BN_CLICKED(IDC_BTN_SEND, &CProjectTestDlg::OnBnClickedBtnSend)
 END_MESSAGE_MAP()
 
 // CProjectTestDlg message handlers
@@ -188,6 +194,19 @@ HCURSOR CProjectTestDlg::OnQueryDragIcon()
     return static_cast<HCURSOR>(m_hIcon);
 }
 
+LRESULT CProjectTestDlg::OnThreadClosed(WPARAM length, LPARAM lpara)
+{
+    ((CSerialComm*)lpara)->HandleClose();
+    delete ((CSerialComm*)lpara);
+
+    return 0;
+}
+
+LRESULT CProjectTestDlg::OnReceive(WPARAM length, LPARAM lpara)
+{
+    return LRESULT();
+}
+
 void CProjectTestDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     CClientDC dc(this);
@@ -288,4 +307,62 @@ void CProjectTestDlg::OnBnClickedBtnList()
 bool CProjectTestDlg::sortFunc(const CNotes& a, const CNotes& b)
 {
     return a.x > b.x;
+}
+
+
+void CProjectTestDlg::OnBnClickedBtnConnect()
+{
+    // TODO: Add your control notification handler code here
+    if (comport_state)
+    {
+        if (m_comm)        //컴포트가존재하면
+        {
+            KillTimer(1000);
+            m_comm->Close();
+            m_comm = NULL;
+            AfxMessageBox(_T("COM 포트닫힘"));
+            comport_state = false;
+            GetDlgItem(IDC_BTN_CONNECT)->SetWindowText(_T("OPEN"));
+            GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
+        }
+    }
+    else
+    {
+        m_comm = new CSerialComm(_T("\\\\.\\") + m_str_comport, m_combo_baudrate, _T("None"), _T("8 Bit"), _T("1 Bit"));         // initial Comm port
+        if (m_comm->Create(GetSafeHwnd()) != 0) //통신포트를열고윈도우의핸들을넘긴다.
+        {
+            SetTimer(1000, 10, NULL);
+            AfxMessageBox(_T("COM 포트열림"));
+            comport_state = true;
+            GetDlgItem(IDC_BTN_CONNECT)->SetWindowText(_T("CLOSE"));
+            GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+        }
+        else
+        {
+            AfxMessageBox(_T("ERROR!"));
+        }
+    }
+}
+
+
+void CProjectTestDlg::OnBnClickedBtnSend()
+{
+    // TODO: Add your control notification handler code here
+    CString strSend;
+    //strSend = _T("LED 0\r\n");
+    m_comm->Send(_T("N"), 1);
+    for (auto& note : m_vctNotes)
+    {
+        strSend = (char)note.note;
+        m_comm->Send(strSend, 1);
+    }
+    m_comm->Send(_T("D"), 1);
+    for (auto& note : m_vctNotes)
+    {
+        strSend = (char)note.duration;
+        m_comm->Send(strSend, 1);
+    }
+        strSend = (char)0x7f;
+        m_comm->Send(strSend, 1);
+
 }

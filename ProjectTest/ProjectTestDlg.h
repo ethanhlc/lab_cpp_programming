@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include "CNotes.h"
+#include "SerialCom.h"
 
 // CProjectTestDlg dialog
 class CProjectTestDlg : public CDialogEx
@@ -14,6 +15,10 @@ class CProjectTestDlg : public CDialogEx
 // Construction
 public:
 	CProjectTestDlg(CWnd* pParent = nullptr);	// standard constructor
+
+	CSerialComm* m_comm;
+	LRESULT		OnThreadClosed(WPARAM length, LPARAM lpara);
+	LRESULT		OnReceive(WPARAM length, LPARAM lpara);
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -49,4 +54,14 @@ public:
 	afx_msg void OnBnClickedBtnList();
 	CString m_NoteList;
 	bool sortFunc(const CNotes& a, const CNotes& b);
+	afx_msg void OnBnClickedBtnConnect();
+	BOOL comport_state;
+
+	CComboBox m_combo_comport_list;
+	CString m_str_comport = _T("COM17");
+	CComboBox m_combo_baudrate_list;
+	CString m_combo_baudrate = _T("115200");
+	CEdit m_edit_rcv_view;
+	CEdit m_edit_send_data;
+	afx_msg void OnBnClickedBtnSend();
 };
