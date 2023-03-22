@@ -3,6 +3,10 @@
 
 #pragma once
 
+#include "CNotes.h"
+#include <vector>
+#include <algorithm>
+
 // CMFCSTMProjectDlg dialog
 class CMFCSTMProjectDlg : public CDialogEx
 {
@@ -29,11 +33,18 @@ protected:
     afx_msg HCURSOR OnQueryDragIcon();
     DECLARE_MESSAGE_MAP()
 public:
-    // functions
+    // message functions
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-    // variables
-    int m_nNoteLength = 2;
     afx_msg void OnBnClickedRHalfNote();
     afx_msg void OnBnClickedRQuarterNote();
     afx_msg void OnBnClickedREighthNote();
+    afx_msg void OnBnClickedBtnList();
+    afx_msg void OnBnClickedBtnErase();
+    // functions
+    void SortNotes();
+    // variables
+    int m_nNoteLength = 2;
+    std::vector<CNotes> m_vctNotes;
+    CString m_strNoteDisp;
+    CString m_strDebug;
 };

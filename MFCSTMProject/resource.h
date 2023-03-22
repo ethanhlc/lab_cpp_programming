@@ -17,6 +17,11 @@
 #define IDC_R_QUARTER_NOTE              1003
 #define IDC_R_EIGHTH_NOTE               1004
 #define IDC_CLEF                        1005
+#define IDC_EDIT_LIST                   1006
+#define IDC_BTN_LIST                    1007
+#define IDC_BTN_ERASE                   1008
+#define IDC_EDIT2                       1009
+#define IDC_EDIT_DEBUG                  1009
 
 // Next default values for new objects
 // 
@@ -24,7 +29,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1006
+#define _APS_NEXT_CONTROL_VALUE         1010
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

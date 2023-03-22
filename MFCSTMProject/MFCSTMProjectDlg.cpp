@@ -50,6 +50,8 @@ END_MESSAGE_MAP()
 
 CMFCSTMProjectDlg::CMFCSTMProjectDlg(CWnd* pParent /*=nullptr*/)
     : CDialogEx(IDD_MFCSTMPROJECT_DIALOG, pParent)
+    , m_strNoteDisp(_T(""))
+    , m_strDebug(_T(""))
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -57,6 +59,8 @@ CMFCSTMProjectDlg::CMFCSTMProjectDlg(CWnd* pParent /*=nullptr*/)
 void CMFCSTMProjectDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialogEx::DoDataExchange(pDX);
+    DDX_Text(pDX, IDC_EDIT_LIST, m_strNoteDisp);
+    DDX_Text(pDX, IDC_EDIT_DEBUG, m_strDebug);
 }
 
 BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
@@ -67,6 +71,8 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
     ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
     ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
+    ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
+    ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -165,6 +171,14 @@ HCURSOR CMFCSTMProjectDlg::OnQueryDragIcon()
     return static_cast<HCURSOR>(m_hIcon);
 }
 
+/// <summary>
+/// Sort notes vector
+/// </summary>
+void CMFCSTMProjectDlg::SortNotes()
+{
+    std::sort(m_vctNotes.begin(), m_vctNotes.end());
+}
+
 // Draw note on mouse click location
 void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
@@ -206,6 +220,18 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
         dc.LineTo(x + 17, y - 36);
     }
 
+    // push note into vector
+    CNotes currNote(x, y, m_nNoteLength);
+    m_vctNotes.push_back(currNote);
+
+    // display note list (debug)
+    CString strList;
+
+    strList.Format(_T("x: %d, y: %d\r\n"), x, y);
+    m_strDebug += strList;
+
+    UpdateData(0);
+
     CDialogEx::OnLButtonDblClk(nFlags, point);
 }
 
@@ -222,4 +248,28 @@ void CMFCSTMProjectDlg::OnBnClickedRQuarterNote()
 void CMFCSTMProjectDlg::OnBnClickedREighthNote()
 {
     m_nNoteLength = 1;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnList()
+{
+    m_strNoteDisp = "";
+    CString strF;
+
+    SortNotes();
+    for (auto& r : m_vctNotes)
+    {
+        strF.Format(_T("Note: %d, Dur: %d\r\n"), r.GetNote(), r.GetDur());
+        m_strNoteDisp += strF;
+    }
+
+    UpdateData(0);
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnErase()
+{
+    Invalidate(true);
+    m_vctNotes.clear();
+    m_strNoteDisp = "";
+    m_strDebug = "";
+    UpdateData(0);
 }
