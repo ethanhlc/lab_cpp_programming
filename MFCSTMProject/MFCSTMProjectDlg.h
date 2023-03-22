@@ -7,6 +7,9 @@
 #include <vector>
 #include <algorithm>
 
+// Custom Defines
+#define YTOP 50
+
 // CMFCSTMProjectDlg dialog
 class CMFCSTMProjectDlg : public CDialogEx
 {
@@ -42,9 +45,11 @@ public:
     afx_msg void OnBnClickedBtnErase();
     // functions
     void SortNotes();
+    void DrawNotes(int x, int y, int dur);
     // variables
     int m_nNoteLength = 2;
     std::vector<CNotes> m_vctNotes;
     CString m_strNoteDisp;
     CString m_strDebug;
+    afx_msg void OnBnClickedBtnRedraw();
 };

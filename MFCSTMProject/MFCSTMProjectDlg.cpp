@@ -11,9 +11,6 @@
 #define new DEBUG_NEW
 #endif
 
-// Custom Defines
-#define YTOP 50
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -73,6 +70,7 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
     ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
     ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
+    ON_BN_CLICKED(IDC_BTN_REDRAW, &CMFCSTMProjectDlg::OnBnClickedBtnRedraw)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -179,19 +177,12 @@ void CMFCSTMProjectDlg::SortNotes()
     std::sort(m_vctNotes.begin(), m_vctNotes.end());
 }
 
-// Draw note on mouse click location
-void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
+/// <summary>
+/// Draw notes into 'staff'
+/// </summary>
+void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur)
 {
     CClientDC dc(this);
-    int x = point.x;
-    int y = point.y;
-
-    // 'rectify' vertical input
-    y = (y + 5) / 10;
-    y *= 10;
-
-    if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
-        return;
 
     // draw note head (quarter note)
     dc.SelectStockObject(DC_BRUSH);
@@ -202,14 +193,14 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     dc.LineTo(x + 7, y - 40);
 
     // if (half note) : draw hole
-    if (m_nNoteLength == 4)
+    if (dur == 4)
     {
         dc.SetDCBrushColor(RGB(240, 240, 240));
         dc.Ellipse(x - 6, y - 5, x + 6, y + 5);
     }
 
     // if (eighth note) : draw flag
-    if (m_nNoteLength == 1)
+    if (dur == 1)
     {
         LOGBRUSH logBrush;
         logBrush.lbStyle = BS_SOLID;
@@ -219,6 +210,23 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
         dc.MoveTo(x + 10, y - 36);
         dc.LineTo(x + 17, y - 36);
     }
+}
+
+// Draw note on mouse click location
+void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+    //CClientDC dc(this);
+    int x = point.x;
+    int y = point.y;
+
+    // 'rectify' vertical input
+    y = (y + 5) / 10;
+    y *= 10;
+
+    if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
+        return;
+
+    DrawNotes(x, y, m_nNoteLength);
 
     // push note into vector
     CNotes currNote(x, y, m_nNoteLength);
@@ -267,9 +275,29 @@ void CMFCSTMProjectDlg::OnBnClickedBtnList()
 
 void CMFCSTMProjectDlg::OnBnClickedBtnErase()
 {
-    Invalidate(true);
+    Invalidate(true);   // erase notes
     m_vctNotes.clear();
     m_strNoteDisp = "";
     m_strDebug = "";
     UpdateData(0);
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnRedraw()
+{
+    Invalidate(true);   // erase notes
+    UpdateWindow();
+    SortNotes();
+
+    int idx = 0;
+    int x;
+    for (auto& r : m_vctNotes)
+    {
+        x = 90 + (idx * 30);
+        DrawNotes(x, r.y, r.GetDur());
+
+        // update vector
+        r.x = x;
+
+        idx++;
+    }
 }
