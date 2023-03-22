@@ -7,15 +7,22 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_MFCSTMPROJECT_DIALOG        102
 #define IDR_MAINFRAME                   128
+#define IDB_BITMAP3                     133
+#define IDB_CLEF                        133
 #define IDC_STATIC_SHEET                1000
+#define IDC_STATIC_NOTESEL              1001
+#define IDC_R_HALF_NOTE                 1002
+#define IDC_R_QUARTER_NOTE              1003
+#define IDC_R_EIGHTH_NOTE               1004
+#define IDC_CLEF                        1005
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_CONTROL_VALUE         1006
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

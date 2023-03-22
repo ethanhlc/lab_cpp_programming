@@ -33,4 +33,7 @@ public:
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
     // variables
     int m_nNoteLength = 2;
+    afx_msg void OnBnClickedRHalfNote();
+    afx_msg void OnBnClickedRQuarterNote();
+    afx_msg void OnBnClickedREighthNote();
 };

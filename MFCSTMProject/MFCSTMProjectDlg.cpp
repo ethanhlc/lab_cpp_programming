@@ -64,6 +64,9 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
     ON_WM_LBUTTONDBLCLK()
+    ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
+    ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
+    ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -98,6 +101,10 @@ BOOL CMFCSTMProjectDlg::OnInitDialog()
     SetIcon(m_hIcon, FALSE);		// Set small icon
 
     // TODO: Add extra initialization here
+
+    // Set default radio button
+    CButton* pButton = (CButton*)GetDlgItem(IDC_R_QUARTER_NOTE);
+    pButton->SetCheck(true);
 
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -169,7 +176,7 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     y = (y + 5) / 10;
     y *= 10;
 
-    if (y < (YTOP - 10) || y > (YTOP + 90) || x < 90)
+    if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
         return;
 
     // draw note head (quarter note)
@@ -200,4 +207,19 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     }
 
     CDialogEx::OnLButtonDblClk(nFlags, point);
+}
+
+void CMFCSTMProjectDlg::OnBnClickedRHalfNote()
+{
+    m_nNoteLength = 4;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedRQuarterNote()
+{
+    m_nNoteLength = 2;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedREighthNote()
+{
+    m_nNoteLength = 1;
 }
