@@ -7,7 +7,6 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_MFCSTMPROJECT_DIALOG        102
 #define IDR_MAINFRAME                   128
-#define IDC_STATIC_                     1000
 #define IDC_STATIC_SHEET                1000
 
 // Next default values for new objects
