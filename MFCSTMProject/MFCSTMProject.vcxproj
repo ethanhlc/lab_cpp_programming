@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CNotes.h" />
+    <ClInclude Include="CSerialComm.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFCSTMProject.h" />
     <ClInclude Include="MFCSTMProjectDlg.h" />
@@ -193,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CNotes.cpp" />
+    <ClCompile Include="CSerialComm.cpp" />
     <ClCompile Include="MFCSTMProject.cpp" />
     <ClCompile Include="MFCSTMProjectDlg.cpp" />
     <ClCompile Include="pch.cpp">

@@ -65,6 +65,12 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
     ON_WM_LBUTTONDBLCLK()
+
+    // SerialComm BEGIN
+    ON_MESSAGE(WM_MYCLOSE, &CMFCSTMProjectDlg::OnThreadClosed)
+    ON_MESSAGE(WM_MYRECEIVE, &CMFCSTMProjectDlg::OnReceive)
+    // SerialComm END
+
     ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
     ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
     ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
@@ -101,8 +107,8 @@ BOOL CMFCSTMProjectDlg::OnInitDialog()
 
     // Set the icon for this dialog.  The framework does this automatically
     //  when the application's main window is not a dialog
-    SetIcon(m_hIcon, TRUE);			// Set big icon
-    SetIcon(m_hIcon, FALSE);		// Set small icon
+    SetIcon(m_hIcon, TRUE);         // Set big icon
+    SetIcon(m_hIcon, FALSE);        // Set small icon
 
     // TODO: Add extra initialization here
 
@@ -212,6 +218,21 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur)
     }
 }
 
+// SerialComm BEGIN
+LRESULT CMFCSTMProjectDlg::OnThreadClosed(WPARAM length, LPARAM lpara)
+{
+    ((CSerialComm*)lpara)->HandleClose();
+    delete ((CSerialComm*)lpara);
+
+    return 0;
+}
+
+LRESULT CMFCSTMProjectDlg::OnReceive(WPARAM length, LPARAM lpara)
+{
+    return LRESULT();
+}
+// SerialComm END
+
 // Draw note on mouse click location
 void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
@@ -285,7 +306,7 @@ void CMFCSTMProjectDlg::OnBnClickedBtnErase()
 void CMFCSTMProjectDlg::OnBnClickedBtnRedraw()
 {
     Invalidate(true);   // erase notes
-    UpdateWindow();
+    UpdateWindow();     // redraw staff
     SortNotes();
 
     int idx = 0;

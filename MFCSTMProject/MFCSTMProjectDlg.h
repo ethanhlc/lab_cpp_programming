@@ -4,6 +4,7 @@
 #pragma once
 
 #include "CNotes.h"
+#include "CSerialComm.h"
 #include <vector>
 #include <algorithm>
 
@@ -15,7 +16,7 @@ class CMFCSTMProjectDlg : public CDialogEx
 {
     // Construction
 public:
-    CMFCSTMProjectDlg(CWnd* pParent = nullptr);	// standard constructor
+    CMFCSTMProjectDlg(CWnd* pParent = nullptr);         // standard constructor
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -23,7 +24,7 @@ public:
 #endif
 
 protected:
-    virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 // Implementation
 protected:
@@ -43,6 +44,10 @@ public:
     afx_msg void OnBnClickedREighthNote();
     afx_msg void OnBnClickedBtnList();
     afx_msg void OnBnClickedBtnErase();
+    // SerialComm
+    CSerialComm* m_comm;
+    LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
+    LRESULT OnReceive(WPARAM length, LPARAM lpara);
     // functions
     void SortNotes();
     void DrawNotes(int x, int y, int dur);
