@@ -62,5 +62,14 @@
     <Image Include="res\treble_clef.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\eighth_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\half_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\quarter_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

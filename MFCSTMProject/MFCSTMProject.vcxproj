@@ -207,7 +207,10 @@
     <None Include="res\MFCSTMProject.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\eighth_icon.bmp" />
+    <Image Include="res\half_icon.bmp" />
     <Image Include="res\MFCSTMProject.ico" />
+    <Image Include="res\quarter_icon.bmp" />
     <Image Include="res\treble_clef.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
