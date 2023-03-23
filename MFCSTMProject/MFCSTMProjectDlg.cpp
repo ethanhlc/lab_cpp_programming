@@ -75,16 +75,20 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_MESSAGE(WM_MYRECEIVE, &CMFCSTMProjectDlg::OnReceive)
     // SerialComm END
 
+    ON_WM_DESTROY()
     ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
     ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
     ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
     ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
     ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
     ON_BN_CLICKED(IDC_BTN_REDRAW, &CMFCSTMProjectDlg::OnBnClickedBtnRedraw)
-    ON_BN_CLICKED(IDC_BTN_CONNECT_CLOSE, &CMFCSTMProjectDlg::OnBnClickedConnectClose)
+
     ON_CBN_SELCHANGE(IDC_COMBO_BAUD, &CMFCSTMProjectDlg::OnSelchangeComboBaud)
     ON_CBN_SELCHANGE(IDC_COMBO_COMPORT, &CMFCSTMProjectDlg::OnSelchangeComboComport)
     ON_CBN_DROPDOWN(IDC_COMBO_COMPORT, &CMFCSTMProjectDlg::OnDropdownComboComport)
+    ON_BN_CLICKED(IDC_BTN_CONNECT_CLOSE, &CMFCSTMProjectDlg::OnBnClickedConnectClose)
+    ON_BN_CLICKED(IDC_BTN_SEND, &CMFCSTMProjectDlg::OnBnClickedBtnSend)
+    ON_BN_CLICKED(IDC_BTN_PLAY, &CMFCSTMProjectDlg::OnBnClickedBtnPlay)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -260,6 +264,15 @@ LRESULT CMFCSTMProjectDlg::OnReceive(WPARAM length, LPARAM lpara)
 }
 // SerialComm END
 
+void CMFCSTMProjectDlg::OnDestroy()
+{
+    CDialogEx::OnDestroy();
+
+    KillTimer(1000);
+    m_comm->Close();
+    m_comm = NULL;
+}
+
 // Draw note on mouse click location
 void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
@@ -361,7 +374,8 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             m_comm = NULL;
             AfxMessageBox(_T("COM Port Closed"));
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Open"));
-            //GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
+            GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
+            GetDlgItem(IDC_BTN_PLAY)->ShowWindow(false);
             comport_state = false;
         }
     }
@@ -374,7 +388,7 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             AfxMessageBox(_T("COM Port Opened"));
             //GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(m_strCOMPort); // display connected port on btn
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Close"));
-            //GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+            GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
             comport_state = true;
         }
         else
@@ -393,7 +407,6 @@ void CMFCSTMProjectDlg::OnSelchangeComboComport()
 {
     UpdateData(1);
 }
-
 
 void CMFCSTMProjectDlg::OnDropdownComboComport()
 {
@@ -421,4 +434,36 @@ void CMFCSTMProjectDlg::OnDropdownComboComport()
     }
     RegCloseKey(hKey);
     // END populate combo entry
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnSend()
+{
+    CString strSend;
+    SortNotes();
+
+    //strSend = _T("LED 0\r\n");      // Debug
+    m_comm->Send(_T("N"), 1);   // 0x4E : Note
+    for (auto& note : m_vctNotes)
+    {
+        strSend = (char)note.note;
+        m_comm->Send(strSend, 1);
+    }
+
+    m_comm->Send(_T("D"), 1);   // 0x44 : Duration
+    for (auto& note : m_vctNotes)
+    {
+        strSend = (char)note.duration;
+        m_comm->Send(strSend, 1);
+    }
+
+    strSend = (char)0x7f;       // end code
+    m_comm->Send(strSend, 1);
+
+    //GetDlgItem(IDC_BTN_PLAY)->EnableWindow(true);   // enable 'Play' button
+    GetDlgItem(IDC_BTN_PLAY)->ShowWindow(true);     // display 'Play' button
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnPlay()
+{
+    m_comm->Send(_T("P"), 1);   // 0x50 : Play
 }
