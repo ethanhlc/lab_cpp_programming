@@ -58,6 +58,10 @@ void CMFCSTMProjectDlg::DoDataExchange(CDataExchange* pDX)
     CDialogEx::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_EDIT_LIST, m_strNoteDisp);
     DDX_Text(pDX, IDC_EDIT_DEBUG, m_strDebug);
+    DDX_Control(pDX, IDC_COMBO_COMPORT, m_comboCOMPort);
+    DDX_Control(pDX, IDC_COMBO_BAUD, m_comboBaudRate);
+    DDX_CBString(pDX, IDC_COMBO_COMPORT, m_strCOMPort);
+    DDX_CBString(pDX, IDC_COMBO_BAUD, m_strBaudRate);
 }
 
 BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
@@ -77,6 +81,10 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
     ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
     ON_BN_CLICKED(IDC_BTN_REDRAW, &CMFCSTMProjectDlg::OnBnClickedBtnRedraw)
+    ON_BN_CLICKED(IDC_BTN_CONNECT_CLOSE, &CMFCSTMProjectDlg::OnBnClickedConnectClose)
+    ON_CBN_SELCHANGE(IDC_COMBO_BAUD, &CMFCSTMProjectDlg::OnSelchangeComboBaud)
+    ON_CBN_SELCHANGE(IDC_COMBO_COMPORT, &CMFCSTMProjectDlg::OnSelchangeComboComport)
+    ON_CBN_DROPDOWN(IDC_COMBO_COMPORT, &CMFCSTMProjectDlg::OnDropdownComboComport)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -115,6 +123,25 @@ BOOL CMFCSTMProjectDlg::OnInitDialog()
     // Set default radio button
     CButton* pButton = (CButton*)GetDlgItem(IDC_R_QUARTER_NOTE);
     pButton->SetCheck(true);
+
+    // Init COM & Baud Combo Boxes
+    m_comboBaudRate.AddString(_T("9600"));
+    m_comboBaudRate.AddString(_T("19200"));
+    m_comboBaudRate.AddString(_T("115200"));
+
+    m_comboCOMPort.AddString(_T("COM1"));
+    m_comboCOMPort.AddString(_T("COM2"));
+    m_comboCOMPort.AddString(_T("COM3"));
+    m_comboCOMPort.AddString(_T("COM4"));
+    m_comboCOMPort.AddString(_T("COM5"));
+    m_comboCOMPort.AddString(_T("COM6"));
+    m_comboCOMPort.AddString(_T("COM7"));
+    m_comboCOMPort.AddString(_T("COM8"));
+    m_comboCOMPort.AddString(_T("COM9"));
+
+    UpdateData(0);
+
+    // Init SerialComm
 
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -321,4 +348,77 @@ void CMFCSTMProjectDlg::OnBnClickedBtnRedraw()
 
         idx++;
     }
+}
+
+void CMFCSTMProjectDlg::OnBnClickedConnectClose()
+{
+    if (comport_state)  // connection exists
+    {
+        if (m_comm)     // comport exists
+        {
+            KillTimer(1000);
+            m_comm->Close();
+            m_comm = NULL;
+            AfxMessageBox(_T("COM Port Closed"));
+            GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Open"));
+            //GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
+            comport_state = false;
+        }
+    }
+    else
+    {
+        m_comm = new CSerialComm(_T("\\\\.\\") + m_strCOMPort, m_strBaudRate, _T("None"), _T("8 Bit"), _T("1 Bit"));
+        if (m_comm->Create(GetSafeHwnd()) != 0) // open port & handover window handle
+        {
+            SetTimer(1000, 10, NULL);
+            AfxMessageBox(_T("COM Port Opened"));
+            //GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(m_strCOMPort); // display connected port on btn
+            GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Close"));
+            //GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+            comport_state = true;
+        }
+        else
+        {
+            AfxMessageBox(_T("Connection Error!"));
+        }
+    }
+}
+
+void CMFCSTMProjectDlg::OnSelchangeComboBaud()
+{
+    UpdateData(1);
+}
+
+void CMFCSTMProjectDlg::OnSelchangeComboComport()
+{
+    UpdateData(1);
+}
+
+
+void CMFCSTMProjectDlg::OnDropdownComboComport()
+{
+    // populate combo entry
+    SendDlgItemMessage(IDC_COMBO_COMPORT, CB_RESETCONTENT);
+    HKEY hKey;
+    RegOpenKey(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DEVICEMAP\\SERIALCOMM"), &hKey);
+
+    int index = 0;
+    DWORD dwSize = 100;
+    TCHAR szName[100] = { 0, };
+    //char szName[100] = { 0, };
+    //wchar_t szName[100] = { 0, };
+    while (ERROR_SUCCESS == RegEnumValue(hKey, index, szName, &dwSize, NULL, NULL, NULL, NULL)) {
+        DWORD dwType = REG_SZ;
+        DWORD dwSize2 = 20;
+        char szData[20] = { 0, };
+        RegQueryValueEx(hKey, szName, NULL, &dwType, (LPBYTE)szData, &dwSize2);
+
+        SendDlgItemMessage(IDC_COMBO_COMPORT, CB_ADDSTRING, 0, (LPARAM)szData);
+        index++;
+
+        dwSize = 100;
+        memset(szName, 0, sizeof(szName));
+    }
+    RegCloseKey(hKey);
+    // END populate combo entry
 }

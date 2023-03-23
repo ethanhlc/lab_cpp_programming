@@ -44,10 +44,19 @@ public:
     afx_msg void OnBnClickedREighthNote();
     afx_msg void OnBnClickedBtnList();
     afx_msg void OnBnClickedBtnErase();
+    afx_msg void OnBnClickedBtnRedraw();
     // SerialComm
     CSerialComm* m_comm;
     LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
     LRESULT OnReceive(WPARAM length, LPARAM lpara);
+    afx_msg void OnBnClickedConnectClose();
+    afx_msg void OnSelchangeComboBaud();
+    afx_msg void OnSelchangeComboComport();
+    CComboBox m_comboCOMPort;
+    CComboBox m_comboBaudRate;
+    CString m_strCOMPort = _T("COM1");
+    CString m_strBaudRate = _T("115200");
+    bool comport_state = false;
     // functions
     void SortNotes();
     void DrawNotes(int x, int y, int dur);
@@ -56,5 +65,5 @@ public:
     std::vector<CNotes> m_vctNotes;
     CString m_strNoteDisp;
     CString m_strDebug;
-    afx_msg void OnBnClickedBtnRedraw();
+    afx_msg void OnDropdownComboComport();
 };

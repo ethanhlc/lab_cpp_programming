@@ -21,8 +21,10 @@
 #define IDC_BTN_LIST                    1007
 #define IDC_BTN_ERASE                   1008
 #define IDC_EDIT_DEBUG                  1009
-#define IDC_BUTTON3                     1010
 #define IDC_BTN_REDRAW                  1010
+#define IDC_COMBO_COMPORT               1011
+#define IDC_COMBO_BAUD                  1012
+#define IDC_BTN_CONNECT_CLOSE           1013
 
 // Next default values for new objects
 // 
@@ -30,7 +32,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
