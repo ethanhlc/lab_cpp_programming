@@ -243,6 +243,18 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
             dc.LineTo(x - 8, y + 40);
         }
 
+        // draw additional staff
+        if (y == 30 || y == 150)
+        {
+            dc.MoveTo(x - 13, y);
+            dc.LineTo(x + 13, y);
+        }
+        else if (y == 20)
+        {
+            dc.MoveTo(x - 13, 30);
+            dc.LineTo(x + 13, 30);
+        }
+
         // if (half note) : draw hole
         if (dur == 4)
         {
@@ -347,7 +359,7 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     y = (y + 5) / 10;
     y *= 10;
 
-    if (y < (YTOP - 10) || y > (YTOP + 90) || x < 90)
+    if (y < (YTOP - 30) || y > (YTOP + 100) || x < 90)
         return;
 
     DrawNotes(x, y, m_nNoteLength, m_bRest);
