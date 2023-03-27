@@ -79,6 +79,9 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
     ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
     ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
+    ON_BN_CLICKED(IDC_R_HALF_REST, &CMFCSTMProjectDlg::OnBnClickedRHalfRest)
+    ON_BN_CLICKED(IDC_R_QUARTER_REST, &CMFCSTMProjectDlg::OnBnClickedRQuarterRest)
+    ON_BN_CLICKED(IDC_R_EIGHTH_REST, &CMFCSTMProjectDlg::OnBnClickedREighthRest)
     ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
     ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
     ON_BN_CLICKED(IDC_BTN_REDRAW, &CMFCSTMProjectDlg::OnBnClickedBtnRedraw)
@@ -217,35 +220,78 @@ void CMFCSTMProjectDlg::SortNotes()
 /// <summary>
 /// Draw notes into 'staff'
 /// </summary>
-void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur)
+void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
 {
     CClientDC dc(this);
 
-    // draw note head (quarter note)
-    dc.SelectStockObject(DC_BRUSH);
-    dc.SetDCBrushColor(RGB(0, 0, 0));
-    dc.Ellipse(x - 8, y - 7, x + 8, y + 7);
-    // draw stem
-    dc.MoveTo(x + 7, y);
-    dc.LineTo(x + 7, y - 40);
-
-    // if (half note) : draw hole
-    if (dur == 4)
+    if (rest == false)
     {
-        dc.SetDCBrushColor(RGB(240, 240, 240));
-        dc.Ellipse(x - 6, y - 5, x + 6, y + 5);
+        // draw note head (quarter note)
+        dc.SelectStockObject(DC_BRUSH);
+        dc.SetDCBrushColor(RGB(0, 0, 0));
+        dc.Ellipse(x - 8, y - 7, x + 8, y + 7);
+        // draw stem
+        dc.MoveTo(x + 7, y);
+        dc.LineTo(x + 7, y - 40);
+
+        // if (half note) : draw hole
+        if (dur == 4)
+        {
+            dc.SetDCBrushColor(RGB(240, 240, 240));
+            dc.Ellipse(x - 6, y - 5, x + 6, y + 5);
+        }
+
+        // if (eighth note) : draw flag
+        if (dur == 1)
+        {
+            LOGBRUSH logBrush;
+            logBrush.lbStyle = BS_SOLID;
+            logBrush.lbColor = RGB(0, 0, 0);
+            CPen thickline(PS_GEOMETRIC | PS_ENDCAP_SQUARE, 7, &logBrush);
+            dc.SelectObject(&thickline);
+            dc.MoveTo(x + 10, y - 36);
+            dc.LineTo(x + 17, y - 36);
+        }
     }
-
-    // if (eighth note) : draw flag
-    if (dur == 1)
+    else
     {
+        // brush definitions
         LOGBRUSH logBrush;
         logBrush.lbStyle = BS_SOLID;
         logBrush.lbColor = RGB(0, 0, 0);
-        CPen thickline(PS_GEOMETRIC | PS_ENDCAP_SQUARE, 7, &logBrush);
-        dc.SelectObject(&thickline);
-        dc.MoveTo(x + 10, y - 36);
-        dc.LineTo(x + 17, y - 36);
+        CPen qRest1(PS_GEOMETRIC | PS_ENDCAP_ROUND, 2, &logBrush);
+        CPen qRest2(PS_GEOMETRIC | PS_ENDCAP_ROUND, 4, &logBrush);
+        CPen halfRest(PS_GEOMETRIC | PS_ENDCAP_SQUARE, 4, &logBrush);
+
+        // if (eighth rest)
+        if (dur == 1)
+        {
+            dc.SelectStockObject(DC_BRUSH);
+            dc.SetDCBrushColor(RGB(0, 0, 0));
+            dc.Ellipse(x - 4, 83 - 4, x + 4, 83 + 4);
+            dc.MoveTo(x + 4, 80);
+            dc.LineTo(x - 4, 103);
+        }
+        // if (quarter rest)
+        else if (dur == 2)
+        {
+            dc.SelectObject(&qRest1);
+            dc.MoveTo(x, 68);
+            dc.LineTo(x + 5, 80);
+            dc.SelectObject(&qRest2);
+            dc.LineTo(x - 1, 86);
+            dc.SelectObject(&qRest1);
+            dc.LineTo(x + 4, 97);
+            dc.LineTo(x - 2, 97);
+            dc.LineTo(x + 2, 110);
+        }
+        // if (half rest)
+        else if (dur == 4)
+        {
+            dc.SelectObject(&halfRest);
+            dc.MoveTo(x - 2, 88);
+            dc.LineTo(x + 4, 88);
+        }
     }
 }
 
@@ -287,10 +333,10 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
         return;
 
-    DrawNotes(x, y, m_nNoteLength);
+    DrawNotes(x, y, m_nNoteLength, m_bRest);
 
     // push note into vector
-    CNotes currNote(x, y, m_nNoteLength);
+    CNotes currNote(x, y, m_nNoteLength, m_bRest);
     m_vctNotes.push_back(currNote);
 
     // display note list (debug)
@@ -307,16 +353,37 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CMFCSTMProjectDlg::OnBnClickedRHalfNote()
 {
     m_nNoteLength = 4;
+    m_bRest = false;
 }
 
 void CMFCSTMProjectDlg::OnBnClickedRQuarterNote()
 {
     m_nNoteLength = 2;
+    m_bRest = false;
 }
 
 void CMFCSTMProjectDlg::OnBnClickedREighthNote()
 {
     m_nNoteLength = 1;
+    m_bRest = false;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedRHalfRest()
+{
+    m_nNoteLength = 4;
+    m_bRest = true;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedRQuarterRest()
+{
+    m_nNoteLength = 2;
+    m_bRest = true;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedREighthRest()
+{
+    m_nNoteLength = 1;
+    m_bRest = true;
 }
 
 void CMFCSTMProjectDlg::OnBnClickedBtnList()
@@ -354,7 +421,7 @@ void CMFCSTMProjectDlg::OnBnClickedBtnRedraw()
     for (auto& r : m_vctNotes)
     {
         x = 90 + (idx * 30);
-        DrawNotes(x, r.y, r.GetDur());
+        DrawNotes(x, r.y, r.GetDur(), r.GetRest());
 
         // update vector
         r.x = x;

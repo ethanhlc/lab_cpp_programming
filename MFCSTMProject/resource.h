@@ -26,8 +26,11 @@
 #define IDC_COMBO_BAUD                  1012
 #define IDC_BTN_CONNECT_CLOSE           1013
 #define IDC_BTN_SEND                    1014
-#define IDC_BUTTON2                     1015
 #define IDC_BTN_PLAY                    1015
+#define IDC_R_HALF_REST                 1016
+#define IDC_R_QUARTER_REST              1017
+#define IDC_R_QUARTER_REST2             1018
+#define IDC_R_EIGHTH_REST               1018
 
 // Next default values for new objects
 // 

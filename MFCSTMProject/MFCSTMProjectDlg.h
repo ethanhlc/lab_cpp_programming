@@ -47,6 +47,10 @@ public:
     afx_msg void OnBnClickedBtnErase();
     afx_msg void OnBnClickedBtnRedraw();
     afx_msg void OnBnClickedBtnSend();
+    afx_msg void OnBnClickedBtnPlay();
+    afx_msg void OnBnClickedRHalfRest();
+    afx_msg void OnBnClickedRQuarterRest();
+    afx_msg void OnBnClickedREighthRest();
     // SerialComm
     CSerialComm* m_comm = NULL;
     LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
@@ -62,11 +66,11 @@ public:
     bool comport_state = false;
     // functions
     void SortNotes();
-    void DrawNotes(int x, int y, int dur);
+    void DrawNotes(int x, int y, int dur, bool rest);
     // variables
     int m_nNoteLength = 2;
+    bool m_bRest = false;
     std::vector<CNotes> m_vctNotes;
     CString m_strNoteDisp;
     CString m_strDebug;
-    afx_msg void OnBnClickedBtnPlay();
 };
