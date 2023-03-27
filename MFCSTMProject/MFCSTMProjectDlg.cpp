@@ -232,8 +232,16 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
         dc.SetDCBrushColor(RGB(0, 0, 0));
         dc.Ellipse(x - 8, y - 7, x + 8, y + 7);
         // draw stem
-        dc.MoveTo(x + 7, y);
-        dc.LineTo(x + 7, y - 40);
+        if (y > 90)     // stem on right
+        {
+            dc.MoveTo(x + 7, y);
+            dc.LineTo(x + 7, y - 40);
+        }
+        else            // stem on left
+        {
+            dc.MoveTo(x - 8, y);
+            dc.LineTo(x - 8, y + 40);
+        }
 
         // if (half note) : draw hole
         if (dur == 4)
@@ -250,8 +258,16 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
             logBrush.lbColor = RGB(0, 0, 0);
             CPen thickline(PS_GEOMETRIC | PS_ENDCAP_SQUARE, 7, &logBrush);
             dc.SelectObject(&thickline);
-            dc.MoveTo(x + 10, y - 36);
-            dc.LineTo(x + 17, y - 36);
+            if (y > 90)
+            {
+                dc.MoveTo(x + 10, y - 36);
+                dc.LineTo(x + 17, y - 36);
+            }
+            else
+            {
+                dc.MoveTo(x - 5, y + 36);
+                dc.LineTo(x + 1, y + 36);
+            }
         }
     }
     else
@@ -331,7 +347,7 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     y = (y + 5) / 10;
     y *= 10;
 
-    if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
+    if (y < (YTOP - 10) || y > (YTOP + 90) || x < 90)
         return;
 
     DrawNotes(x, y, m_nNoteLength, m_bRest);
