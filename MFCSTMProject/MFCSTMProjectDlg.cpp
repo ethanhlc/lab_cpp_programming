@@ -92,6 +92,7 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_CONNECT_CLOSE, &CMFCSTMProjectDlg::OnBnClickedConnectClose)
     ON_BN_CLICKED(IDC_BTN_SEND, &CMFCSTMProjectDlg::OnBnClickedBtnSend)
     ON_BN_CLICKED(IDC_BTN_PLAY, &CMFCSTMProjectDlg::OnBnClickedBtnPlay)
+    ON_WM_RBUTTONDBLCLK()
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -533,4 +534,44 @@ void CMFCSTMProjectDlg::OnBnClickedBtnSend()
 void CMFCSTMProjectDlg::OnBnClickedBtnPlay()
 {
     m_comm->Send(_T("P"), 1);   // 0x50 : Play
+}
+
+// Erase note on mouse right double click location
+void CMFCSTMProjectDlg::OnRButtonDblClk(UINT nFlags, CPoint point)
+{
+    int x = point.x;
+    int y = point.y;
+
+    // 'rectify' vertical input
+    y = (y + 5) / 10;
+    y *= 10;
+
+    if (y < (YTOP - 10) || y >(YTOP + 90) || x < 90)
+        return;
+
+    std::vector<CNotes>::iterator it;
+    for (it = m_vctNotes.begin(); it != m_vctNotes.end(); it++)
+    {
+        if (x > (it->x - 5) && x < (it->x + 5))
+        {
+            m_vctNotes.erase(it);
+            break;
+        }
+    }
+
+    // alternate erase method
+    //int idx = 0;
+    //for (auto& note : m_vctNotes)
+    //{
+    //    if (x > (note.x - 5) && x < (note.x + 5))
+    //    {
+    //        m_vctNotes.erase(m_vctNotes.begin() + idx);
+    //        break;
+    //    }
+    //    idx++;
+    //}
+
+    OnBnClickedBtnRedraw();
+
+    CDialogEx::OnRButtonDblClk(nFlags, point);
 }

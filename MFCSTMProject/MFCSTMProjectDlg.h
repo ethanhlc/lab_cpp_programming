@@ -73,4 +73,5 @@ public:
     std::vector<CNotes> m_vctNotes;
     CString m_strNoteDisp;
     CString m_strDebug;
+    afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
 };
