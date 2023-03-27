@@ -449,7 +449,7 @@ void CMFCSTMProjectDlg::OnBnClickedBtnRedraw()
     int x;
     for (auto& r : m_vctNotes)
     {
-        x = 90 + (idx * 30);
+        x = 90 + (idx * 20);
         DrawNotes(x, r.y, r.GetDur(), r.GetRest());
 
         // update vector
@@ -472,6 +472,8 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Open"));
             GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
             GetDlgItem(IDC_BTN_PLAY)->ShowWindow(false);
+            GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(true);
+            GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(true);
             comport_state = false;
         }
     }
@@ -485,6 +487,8 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             //GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(m_strCOMPort); // display connected port on btn
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Close"));
             GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+            GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(false);
+            GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(false);
             comport_state = true;
         }
         else

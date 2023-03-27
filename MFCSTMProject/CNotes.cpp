@@ -16,7 +16,7 @@ CNotes::CNotes(int x, int y, int dur, bool rest)
         note = -1;
         return;
     }
-    int y_note = y - (YTOP + 10);   // (linepos + 10)
+    int y_note = y - (YTOP);   // (linepos)
     y_note = y_note / 10;
     note = 10 - y_note;
 }
