@@ -83,5 +83,14 @@
     <Image Include="res\quarter_icon.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\resteighth.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\restquarter.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\resthalf.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

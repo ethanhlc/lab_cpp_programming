@@ -215,6 +215,9 @@
     <Image Include="res\half_icon.bmp" />
     <Image Include="res\MFCSTMProject.ico" />
     <Image Include="res\quarter_icon.bmp" />
+    <Image Include="res\resteighth.bmp" />
+    <Image Include="res\resthalf.bmp" />
+    <Image Include="res\restquarter.bmp" />
     <Image Include="res\treble_clef.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -11,6 +11,9 @@
 #define IDB_EIGHTH                      134
 #define IDB_HALF                        135
 #define IDB_QUARTER                     136
+#define IDB_REST_8                      137
+#define IDB_REST_4                      138
+#define IDB_REST_2                      140
 #define IDC_STATIC_SHEET                1000
 #define IDC_STATIC_NOTESEL              1001
 #define IDC_R_HALF_NOTE                 1002
@@ -29,14 +32,13 @@
 #define IDC_BTN_PLAY                    1015
 #define IDC_R_HALF_REST                 1016
 #define IDC_R_QUARTER_REST              1017
-#define IDC_R_QUARTER_REST2             1018
 #define IDC_R_EIGHTH_REST               1018
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1016
 #define _APS_NEXT_SYMED_VALUE           101
