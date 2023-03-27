@@ -64,6 +64,8 @@ void CMFCSTMProjectDlg::DoDataExchange(CDataExchange* pDX)
     DDX_CBString(pDX, IDC_COMBO_COMPORT, m_strCOMPort);
     DDX_CBString(pDX, IDC_COMBO_BAUD, m_strBaudRate);
     DDX_Text(pDX, IDC_EDIT_FILE, m_strFile);
+    DDX_Control(pDX, IDC_COMBO_TEMPO, m_comboTempo);
+    DDX_CBString(pDX, IDC_COMBO_TEMPO, m_strTempo);
 }
 
 BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
@@ -71,6 +73,7 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_WM_PAINT()
     ON_WM_QUERYDRAGICON()
     ON_WM_LBUTTONDBLCLK()
+    ON_WM_RBUTTONDBLCLK()
 
     // SerialComm BEGIN
     ON_MESSAGE(WM_MYCLOSE, &CMFCSTMProjectDlg::OnThreadClosed)
@@ -94,9 +97,10 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_CONNECT_CLOSE, &CMFCSTMProjectDlg::OnBnClickedConnectClose)
     ON_BN_CLICKED(IDC_BTN_SEND, &CMFCSTMProjectDlg::OnBnClickedBtnSend)
     ON_BN_CLICKED(IDC_BTN_PLAY, &CMFCSTMProjectDlg::OnBnClickedBtnPlay)
-    ON_WM_RBUTTONDBLCLK()
     ON_BN_CLICKED(IDC_BTN_SAVE, &CMFCSTMProjectDlg::OnBnClickedBtnSave)
     ON_BN_CLICKED(IDC_BTN_LOAD, &CMFCSTMProjectDlg::OnBnClickedBtnLoad)
+    ON_CBN_SELCHANGE(IDC_COMBO_TEMPO, &CMFCSTMProjectDlg::OnSelchangeComboTempo)
+    ON_BN_CLICKED(IDC_BTN_TEMPO, &CMFCSTMProjectDlg::OnBnClickedBtnTempo)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -150,6 +154,12 @@ BOOL CMFCSTMProjectDlg::OnInitDialog()
     m_comboCOMPort.AddString(_T("COM7"));
     m_comboCOMPort.AddString(_T("COM8"));
     m_comboCOMPort.AddString(_T("COM9"));
+
+    m_comboTempo.AddString(_T("  60"));
+    m_comboTempo.AddString(_T("  80"));
+    m_comboTempo.AddString(_T("100"));
+    m_comboTempo.AddString(_T("120"));
+    m_comboTempo.AddString(_T("200"));
 
     UpdateData(0);
 
@@ -475,9 +485,11 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             AfxMessageBox(_T("COM Port Closed"));
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Open"));
             GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
-            GetDlgItem(IDC_BTN_PLAY)->ShowWindow(false);
+            GetDlgItem(IDC_BTN_PLAY)->EnableWindow(false);
+            GetDlgItem(IDC_BTN_TEMPO)->EnableWindow(false);
             GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(true);
             GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(true);
+            GetDlgItem(IDC_COMBO_TEMPO)->EnableWindow(false);
             comport_state = false;
         }
     }
@@ -491,8 +503,10 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             //GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(m_strCOMPort); // display connected port on btn
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Close"));
             GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+            GetDlgItem(IDC_BTN_TEMPO)->EnableWindow(true);
             GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(false);
             GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(false);
+            GetDlgItem(IDC_COMBO_TEMPO)->EnableWindow(true);
             comport_state = true;
         }
         else
@@ -563,8 +577,8 @@ void CMFCSTMProjectDlg::OnBnClickedBtnSend()
     strSend = (char)0x7f;       // end code
     m_comm->Send(strSend, 1);
 
-    //GetDlgItem(IDC_BTN_PLAY)->EnableWindow(true);   // enable 'Play' button
-    GetDlgItem(IDC_BTN_PLAY)->ShowWindow(true);     // display 'Play' button
+    GetDlgItem(IDC_BTN_PLAY)->EnableWindow(true);   // enable 'Play' button
+    //GetDlgItem(IDC_BTN_PLAY)->ShowWindow(true);     // display 'Play' button
 }
 
 void CMFCSTMProjectDlg::OnBnClickedBtnPlay()
@@ -685,4 +699,30 @@ void CMFCSTMProjectDlg::OnBnClickedBtnLoad()
     OnBnClickedBtnRedraw();
 
     AfxMessageBox(_T("Music Loaded"), MB_ICONASTERISK);
+}
+
+void CMFCSTMProjectDlg::OnSelchangeComboTempo()
+{
+    UpdateData(1);
+
+    if (m_strTempo == _T("  60"))
+        m_nTempo = 0;
+    else if (m_strTempo == _T("  80"))
+        m_nTempo = 1;
+    else if (m_strTempo == _T("100"))
+        m_nTempo = 2;
+    else if (m_strTempo == _T("120"))
+        m_nTempo = 3;
+    else if (m_strTempo == _T("200"))
+        m_nTempo = 4;
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnTempo()
+{
+    UpdateData(1);
+    CString strSend;
+    m_comm->Send(_T("T"), 1);   // 0x54
+    strSend = (char)m_nTempo;
+    m_comm->Send(strSend, 1);
+    AfxMessageBox(_T("Tempo set to: " + m_strTempo + "bpm"));
 }

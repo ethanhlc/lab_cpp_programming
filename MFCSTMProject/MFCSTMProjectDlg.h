@@ -55,6 +55,8 @@ public:
 
     afx_msg void OnBnClickedBtnSend();
     afx_msg void OnBnClickedBtnPlay();
+    afx_msg void OnSelchangeComboTempo();
+    afx_msg void OnBnClickedBtnTempo();
 
     afx_msg void OnBnClickedBtnSave();
     afx_msg void OnBnClickedBtnLoad();
@@ -81,4 +83,7 @@ public:
     CString m_strNoteDisp;
     CString m_strDebug;
     CString m_strFile;
+    int m_nTempo = 3;
+    CComboBox m_comboTempo;
+    CString m_strTempo = _T("120");
 };
