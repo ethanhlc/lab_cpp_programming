@@ -33,6 +33,9 @@
 #define IDC_R_HALF_REST                 1016
 #define IDC_R_QUARTER_REST              1017
 #define IDC_R_EIGHTH_REST               1018
+#define IDC_BTN_SAVE                    1019
+#define IDC_BTN_LOAD                    1020
+#define IDC_EDIT_FILE                   1021
 
 // Next default values for new objects
 // 
@@ -40,7 +43,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1016
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

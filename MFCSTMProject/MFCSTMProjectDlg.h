@@ -40,17 +40,24 @@ public:
     // message functions
     afx_msg void OnDestroy();
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+    afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
+
     afx_msg void OnBnClickedRHalfNote();
     afx_msg void OnBnClickedRQuarterNote();
     afx_msg void OnBnClickedREighthNote();
-    afx_msg void OnBnClickedBtnList();
-    afx_msg void OnBnClickedBtnErase();
-    afx_msg void OnBnClickedBtnRedraw();
-    afx_msg void OnBnClickedBtnSend();
-    afx_msg void OnBnClickedBtnPlay();
     afx_msg void OnBnClickedRHalfRest();
     afx_msg void OnBnClickedRQuarterRest();
     afx_msg void OnBnClickedREighthRest();
+
+    afx_msg void OnBnClickedBtnList();
+    afx_msg void OnBnClickedBtnErase();
+    afx_msg void OnBnClickedBtnRedraw();
+
+    afx_msg void OnBnClickedBtnSend();
+    afx_msg void OnBnClickedBtnPlay();
+
+    afx_msg void OnBnClickedBtnSave();
+    afx_msg void OnBnClickedBtnLoad();
     // SerialComm
     CSerialComm* m_comm = NULL;
     LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
@@ -73,5 +80,5 @@ public:
     std::vector<CNotes> m_vctNotes;
     CString m_strNoteDisp;
     CString m_strDebug;
-    afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
+    CString m_strFile;
 };

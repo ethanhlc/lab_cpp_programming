@@ -49,6 +49,7 @@ CMFCSTMProjectDlg::CMFCSTMProjectDlg(CWnd* pParent /*=nullptr*/)
     : CDialogEx(IDD_MFCSTMPROJECT_DIALOG, pParent)
     , m_strNoteDisp(_T(""))
     , m_strDebug(_T(""))
+    , m_strFile(_T(""))
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -62,6 +63,7 @@ void CMFCSTMProjectDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_COMBO_BAUD, m_comboBaudRate);
     DDX_CBString(pDX, IDC_COMBO_COMPORT, m_strCOMPort);
     DDX_CBString(pDX, IDC_COMBO_BAUD, m_strBaudRate);
+    DDX_Text(pDX, IDC_EDIT_FILE, m_strFile);
 }
 
 BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
@@ -93,6 +95,8 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_SEND, &CMFCSTMProjectDlg::OnBnClickedBtnSend)
     ON_BN_CLICKED(IDC_BTN_PLAY, &CMFCSTMProjectDlg::OnBnClickedBtnPlay)
     ON_WM_RBUTTONDBLCLK()
+    ON_BN_CLICKED(IDC_BTN_SAVE, &CMFCSTMProjectDlg::OnBnClickedBtnSave)
+    ON_BN_CLICKED(IDC_BTN_LOAD, &CMFCSTMProjectDlg::OnBnClickedBtnLoad)
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -359,7 +363,7 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     y = (y + 5) / 10;
     y *= 10;
 
-    if (y < (YTOP - 30) || y > (YTOP + 100) || x < 90)
+    if (y < (YTOP - 30) || y >(YTOP + 100) || x < 90)
         return;
 
     DrawNotes(x, y, m_nNoteLength, m_bRest);
@@ -606,4 +610,79 @@ void CMFCSTMProjectDlg::OnRButtonDblClk(UINT nFlags, CPoint point)
     OnBnClickedBtnRedraw();
 
     CDialogEx::OnRButtonDblClk(nFlags, point);
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnSave()
+{
+    CFile file;
+    SortNotes();
+
+    UpdateData(1);
+    if (file.Open(m_strFile, CFile::modeWrite | CFile::modeCreate) == false)
+    {
+        AfxMessageBox(_T("Could Not Save File"), MB_ICONSTOP);
+        return;
+    }
+
+    CString strFormat;
+    CString strWrite = _T("");
+    for (auto& note : m_vctNotes)
+    {
+        strFormat.Format(_T("%d:%d:%d:%d\r\n"), note.x, note.y, note.duration, note.rest);
+        strWrite += strFormat;
+    }
+    file.Write(strWrite.GetString(), strWrite.GetLength() * 2);
+    file.Close();
+
+    AfxMessageBox(_T("Music Saved"), MB_ICONASTERISK);
+}
+
+void CMFCSTMProjectDlg::OnBnClickedBtnLoad()
+{
+    CFile file;
+
+    UpdateData(1);
+    if (file.Open(m_strFile, CFile::modeRead) == false)
+    {
+        AfxMessageBox(_T("Could Not Open File"), MB_ICONSTOP);
+        return;
+    }
+
+    OnBnClickedBtnErase();
+
+    int x_in, y_in, dur_in;
+    bool rest_in;
+    CString strRead, subStr;
+    CArchive ar(&file, CArchive::load);
+    while (ar.ReadString(strRead))
+    {
+        if (strRead.GetLength())
+        {
+            //AfxMessageBox(strRead);
+            int idx = 0;
+            int pos = 0;
+            subStr = strRead.Tokenize(_T(":"), pos);
+            while (subStr != _T(""))
+            {
+                //AfxMessageBox(subStr);
+                if (idx == 0)
+                    x_in = _ttoi(subStr);
+                else if (idx == 1)
+                    y_in = _ttoi(subStr);
+                else if (idx == 2)
+                    dur_in = _ttoi(subStr);
+                else if (idx == 3)
+                    rest_in = _ttoi(subStr);
+                idx++;
+                subStr = strRead.Tokenize(_T(":"), pos);
+            }
+            CNotes currNote(x_in, y_in, dur_in, rest_in);
+            m_vctNotes.push_back(currNote);
+        }
+    }
+    ar.Close();
+    file.Close();
+    OnBnClickedBtnRedraw();
+
+    AfxMessageBox(_T("Music Loaded"), MB_ICONASTERISK);
 }
