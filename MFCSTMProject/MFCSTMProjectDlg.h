@@ -39,6 +39,7 @@ protected:
 public:
     // message functions
     afx_msg void OnDestroy();
+    afx_msg void OnTimer(UINT_PTR nIDEvent);
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
     afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
 
@@ -78,9 +79,10 @@ public:
     void RedrawInPlace();
 
     // variables
+    std::vector<CNotes> m_vctNotes;
     int m_nNoteLength = 2;
     bool m_bRest = false;
-    std::vector<CNotes> m_vctNotes;
+    bool m_bPlaying = false;
 
     CString m_strNoteDisp;
     CString m_strDebug;

@@ -94,6 +94,7 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_LOAD, &CMFCSTMProjectDlg::OnBnClickedBtnLoad)
     ON_CBN_SELCHANGE(IDC_COMBO_TEMPO, &CMFCSTMProjectDlg::OnSelchangeComboTempo)
     ON_BN_CLICKED(IDC_BTN_TEMPO, &CMFCSTMProjectDlg::OnBnClickedBtnTempo)
+    ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 // CMFCSTMProjectDlg message handlers
@@ -366,6 +367,18 @@ void CMFCSTMProjectDlg::OnDestroy()
     m_comm = NULL;
 }
 
+void CMFCSTMProjectDlg::OnTimer(UINT_PTR nIDEvent)
+{
+    if (nIDEvent == 1000)
+    {
+        m_bPlaying = false;
+        GetDlgItem(IDC_BTN_PLAY)->SetWindowText(_T("Play"));
+        KillTimer(1000);
+    }
+
+    CDialogEx::OnTimer(nIDEvent);
+}
+
 void CMFCSTMProjectDlg::OnOK()
 {
     //CDialogEx::OnOK();
@@ -589,7 +602,29 @@ void CMFCSTMProjectDlg::OnBnClickedBtnSend()
 
 void CMFCSTMProjectDlg::OnBnClickedBtnPlay()
 {
-    m_comm->Send(_T("P"), 1);   // 0x50 : Play
+    if (m_bPlaying == false)
+    {
+        m_comm->Send(_T("P"), 1);   // 0x50 : Play
+
+        m_bPlaying = true;
+        GetDlgItem(IDC_BTN_PLAY)->SetWindowText(_T("Stop"));
+
+        // calculate duration of music
+        int duration = 0;
+        for (auto& note : m_vctNotes)
+        {
+            duration += note.duration;
+        }
+
+        SetTimer(1000, duration * 500 * 60 / _ttoi(m_strTempo), NULL);
+    }
+    else    // stop music if playing
+    {
+        m_comm->Send(_T("S"), 1);   // 0x53 : Stop
+        m_bPlaying = false;
+        GetDlgItem(IDC_BTN_PLAY)->SetWindowText(_T("Play"));
+        KillTimer(1000);
+    }
 }
 
 // Erase note on mouse right double click location
