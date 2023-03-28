@@ -72,8 +72,10 @@ public:
     bool comport_state = false;
 
     // functions
+    virtual void OnOK();
     void SortNotes();
     void DrawNotes(int x, int y, int dur, bool rest);
+    void RedrawInPlace();
 
     // variables
     int m_nNoteLength = 2;
@@ -82,7 +84,6 @@ public:
 
     CString m_strNoteDisp;
     CString m_strDebug;
-    CString m_strFile;
 
     int m_nTempo = 3;
     CComboBox m_comboTempo;

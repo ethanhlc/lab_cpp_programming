@@ -49,7 +49,6 @@ CMFCSTMProjectDlg::CMFCSTMProjectDlg(CWnd* pParent /*=nullptr*/)
     : CDialogEx(IDD_MFCSTMPROJECT_DIALOG, pParent)
     , m_strNoteDisp(_T(""))
     , m_strDebug(_T(""))
-    , m_strFile(_T(""))
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -63,7 +62,6 @@ void CMFCSTMProjectDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_COMBO_BAUD, m_comboBaudRate);
     DDX_CBString(pDX, IDC_COMBO_COMPORT, m_strCOMPort);
     DDX_CBString(pDX, IDC_COMBO_BAUD, m_strBaudRate);
-    DDX_Text(pDX, IDC_EDIT_FILE, m_strFile);
     DDX_Control(pDX, IDC_COMBO_TEMPO, m_comboTempo);
     DDX_CBString(pDX, IDC_COMBO_TEMPO, m_strTempo);
 }
@@ -287,7 +285,7 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
             else
             {
                 dc.MoveTo(x - 5, y + 36);
-                dc.LineTo(x + 1, y + 36);
+                dc.LineTo(x + 2, y + 36);
             }
         }
     }
@@ -333,6 +331,17 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
     }
 }
 
+void CMFCSTMProjectDlg::RedrawInPlace()
+{
+    Invalidate(true);
+    UpdateWindow();
+
+    for (auto& r : m_vctNotes)
+    {
+        DrawNotes(r.x, r.y, r.GetDur(), r.GetRest());
+    }
+}
+
 // SerialComm BEGIN
 LRESULT CMFCSTMProjectDlg::OnThreadClosed(WPARAM length, LPARAM lpara)
 {
@@ -355,6 +364,11 @@ void CMFCSTMProjectDlg::OnDestroy()
     KillTimer(1000);
     m_comm->Close();
     m_comm = NULL;
+}
+
+void CMFCSTMProjectDlg::OnOK()
+{
+    //CDialogEx::OnOK();
 }
 
 // Draw note on mouse click location
@@ -613,84 +627,96 @@ void CMFCSTMProjectDlg::OnRButtonDblClk(UINT nFlags, CPoint point)
     //    idx++;
     //}
 
-    OnBnClickedBtnRedraw();
+    RedrawInPlace();
 
     CDialogEx::OnRButtonDblClk(nFlags, point);
 }
 
 void CMFCSTMProjectDlg::OnBnClickedBtnSave()
 {
-    CFile file;
+    GetDlgItem(IDC_BTN_SAVE)->SetWindowText(_T("Saving..."));
+    GetDlgItem(IDC_BTN_SAVE)->EnableWindow(false);
     SortNotes();
 
-    UpdateData(1);
-    if (file.Open(m_strFile, CFile::modeWrite | CFile::modeCreate) == false)
+    CString szFilter = _T("Text file (*.txt)|*.txt|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(false, _T("txt"), _T("music.txt"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, szFilter, this);
+
+    if (fileDlg.DoModal() == IDOK)
     {
-        AfxMessageBox(_T("Could Not Save File"), MB_ICONSTOP);
-        return;
+        CFile file;
+        if (file.Open(fileDlg.GetPathName(), CFile::modeWrite | CFile::modeCreate) == false)
+        {
+            AfxMessageBox(_T("Could Not Save File"), MB_ICONSTOP);
+            return;
+        }
+
+        CString strFormat;
+        CString strWrite = _T("");
+        for (auto& note : m_vctNotes)
+        {
+            strFormat.Format(_T("%d:%d:%d:%d\r\n"), note.x, note.y, note.duration, note.rest);
+            strWrite += strFormat;
+        }
+        file.Write(strWrite.GetString(), strWrite.GetLength() * 2);
+        file.Close();
     }
 
-    CString strFormat;
-    CString strWrite = _T("");
-    for (auto& note : m_vctNotes)
-    {
-        strFormat.Format(_T("%d:%d:%d:%d\r\n"), note.x, note.y, note.duration, note.rest);
-        strWrite += strFormat;
-    }
-    file.Write(strWrite.GetString(), strWrite.GetLength() * 2);
-    file.Close();
-
-    AfxMessageBox(_T("Music Saved"), MB_ICONASTERISK);
+    GetDlgItem(IDC_BTN_SAVE)->SetWindowText(_T("Save"));
+    GetDlgItem(IDC_BTN_SAVE)->EnableWindow(true);
 }
 
 void CMFCSTMProjectDlg::OnBnClickedBtnLoad()
 {
-    CFile file;
+    CString szFilter = _T("Text file (*.txt)|*.txt|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(true, _T("txt"), NULL, OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, szFilter, this);
 
-    UpdateData(1);
-    if (file.Open(m_strFile, CFile::modeRead) == false)
+    if (fileDlg.DoModal() == IDOK)
     {
-        AfxMessageBox(_T("Could Not Open File"), MB_ICONSTOP);
-        return;
-    }
-
-    OnBnClickedBtnErase();
-
-    int x_in, y_in, dur_in;
-    bool rest_in;
-    CString strRead, subStr;
-    CArchive ar(&file, CArchive::load);
-    while (ar.ReadString(strRead))
-    {
-        if (strRead.GetLength())
+        CFile file;
+        if (file.Open(fileDlg.GetPathName(), CFile::modeRead) == false)
         {
-            //AfxMessageBox(strRead);
-            int idx = 0;
-            int pos = 0;
-            subStr = strRead.Tokenize(_T(":"), pos);
-            while (subStr != _T(""))
-            {
-                //AfxMessageBox(subStr);
-                if (idx == 0)
-                    x_in = _ttoi(subStr);
-                else if (idx == 1)
-                    y_in = _ttoi(subStr);
-                else if (idx == 2)
-                    dur_in = _ttoi(subStr);
-                else if (idx == 3)
-                    rest_in = _ttoi(subStr);
-                idx++;
-                subStr = strRead.Tokenize(_T(":"), pos);
-            }
-            CNotes currNote(x_in, y_in, dur_in, rest_in);
-            m_vctNotes.push_back(currNote);
+            AfxMessageBox(_T("Could Not Open File"), MB_ICONSTOP);
+            return;
         }
-    }
-    ar.Close();
-    file.Close();
-    OnBnClickedBtnRedraw();
 
-    AfxMessageBox(_T("Music Loaded"), MB_ICONASTERISK);
+        OnBnClickedBtnErase();
+
+        int x_in, y_in, dur_in;
+        bool rest_in;
+        CString strRead, subStr;
+        CArchive ar(&file, CArchive::load);
+        while (ar.ReadString(strRead))
+        {
+            if (strRead.GetLength())
+            {
+                //AfxMessageBox(strRead);
+                int idx = 0;
+                int pos = 0;
+                subStr = strRead.Tokenize(_T(":"), pos);
+                while (subStr != _T(""))
+                {
+                    //AfxMessageBox(subStr);
+                    if (idx == 0)
+                        x_in = _ttoi(subStr);
+                    else if (idx == 1)
+                        y_in = _ttoi(subStr);
+                    else if (idx == 2)
+                        dur_in = _ttoi(subStr);
+                    else if (idx == 3)
+                        rest_in = _ttoi(subStr);
+                    idx++;
+                    subStr = strRead.Tokenize(_T(":"), pos);
+                }
+                CNotes currNote(x_in, y_in, dur_in, rest_in);
+                m_vctNotes.push_back(currNote);
+            }
+        }
+        ar.Close();
+        file.Close();
+
+        RedrawInPlace();
+        AfxMessageBox(_T("File Loaded"), MB_ICONASTERISK);
+    }
 }
 
 void CMFCSTMProjectDlg::OnSelchangeComboTempo()
