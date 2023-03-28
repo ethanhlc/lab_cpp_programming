@@ -42,12 +42,7 @@ public:
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
     afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
 
-    afx_msg void OnBnClickedRHalfNote();
-    afx_msg void OnBnClickedRQuarterNote();
-    afx_msg void OnBnClickedREighthNote();
-    afx_msg void OnBnClickedRHalfRest();
-    afx_msg void OnBnClickedRQuarterRest();
-    afx_msg void OnBnClickedREighthRest();
+    afx_msg void OnBnClickedRNoteSelect(UINT nID);
 
     afx_msg void OnBnClickedBtnList();
     afx_msg void OnBnClickedBtnErase();
@@ -60,6 +55,7 @@ public:
 
     afx_msg void OnBnClickedBtnSave();
     afx_msg void OnBnClickedBtnLoad();
+
     // SerialComm
     CSerialComm* m_comm = NULL;
     LRESULT OnThreadClosed(WPARAM length, LPARAM lpara);
@@ -68,21 +64,26 @@ public:
     afx_msg void OnSelchangeComboBaud();
     afx_msg void OnSelchangeComboComport();
     afx_msg void OnDropdownComboComport();
+
     CComboBox m_comboCOMPort;
     CComboBox m_comboBaudRate;
     CString m_strCOMPort = _T("COM1");
     CString m_strBaudRate = _T("115200");
     bool comport_state = false;
+
     // functions
     void SortNotes();
     void DrawNotes(int x, int y, int dur, bool rest);
+
     // variables
     int m_nNoteLength = 2;
     bool m_bRest = false;
     std::vector<CNotes> m_vctNotes;
+
     CString m_strNoteDisp;
     CString m_strDebug;
     CString m_strFile;
+
     int m_nTempo = 3;
     CComboBox m_comboTempo;
     CString m_strTempo = _T("120");

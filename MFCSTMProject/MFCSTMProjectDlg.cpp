@@ -81,12 +81,7 @@ BEGIN_MESSAGE_MAP(CMFCSTMProjectDlg, CDialogEx)
     // SerialComm END
 
     ON_WM_DESTROY()
-    ON_BN_CLICKED(IDC_R_HALF_NOTE, &CMFCSTMProjectDlg::OnBnClickedRHalfNote)
-    ON_BN_CLICKED(IDC_R_QUARTER_NOTE, &CMFCSTMProjectDlg::OnBnClickedRQuarterNote)
-    ON_BN_CLICKED(IDC_R_EIGHTH_NOTE, &CMFCSTMProjectDlg::OnBnClickedREighthNote)
-    ON_BN_CLICKED(IDC_R_HALF_REST, &CMFCSTMProjectDlg::OnBnClickedRHalfRest)
-    ON_BN_CLICKED(IDC_R_QUARTER_REST, &CMFCSTMProjectDlg::OnBnClickedRQuarterRest)
-    ON_BN_CLICKED(IDC_R_EIGHTH_REST, &CMFCSTMProjectDlg::OnBnClickedREighthRest)
+    ON_CONTROL_RANGE(BN_CLICKED, IDC_R_HALF_NOTE, IDC_R_EIGHTH_REST, &CMFCSTMProjectDlg::OnBnClickedRNoteSelect)
     ON_BN_CLICKED(IDC_BTN_LIST, &CMFCSTMProjectDlg::OnBnClickedBtnList)
     ON_BN_CLICKED(IDC_BTN_ERASE, &CMFCSTMProjectDlg::OnBnClickedBtnErase)
     ON_BN_CLICKED(IDC_BTN_REDRAW, &CMFCSTMProjectDlg::OnBnClickedBtnRedraw)
@@ -258,15 +253,15 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
         }
 
         // draw additional staff
-        if (y == 30 || y == 150)
+        if (y == (YTOP - 20) || y == (YTOP + 100))
         {
             dc.MoveTo(x - 13, y);
             dc.LineTo(x + 13, y);
         }
-        else if (y == 20)
+        else if (y == (YTOP - 30))
         {
-            dc.MoveTo(x - 13, 30);
-            dc.LineTo(x + 13, 30);
+            dc.MoveTo(x - 13, y + 10);
+            dc.LineTo(x + 13, y + 10);
         }
 
         // if (half note) : draw hole
@@ -303,7 +298,7 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
         logBrush.lbStyle = BS_SOLID;
         logBrush.lbColor = RGB(0, 0, 0);
         CPen qRest1(PS_GEOMETRIC | PS_ENDCAP_ROUND, 2, &logBrush);
-        CPen qRest2(PS_GEOMETRIC | PS_ENDCAP_ROUND, 4, &logBrush);
+        CPen qRest2(PS_GEOMETRIC | PS_ENDCAP_ROUND, 2, &logBrush);
         CPen halfRest(PS_GEOMETRIC | PS_ENDCAP_SQUARE, 4, &logBrush);
 
         // if (eighth rest)
@@ -311,29 +306,29 @@ void CMFCSTMProjectDlg::DrawNotes(int x, int y, int dur, bool rest)
         {
             dc.SelectStockObject(DC_BRUSH);
             dc.SetDCBrushColor(RGB(0, 0, 0));
-            dc.Ellipse(x - 4, 83 - 4, x + 4, 83 + 4);
-            dc.MoveTo(x + 4, 80);
-            dc.LineTo(x - 4, 103);
+            dc.Ellipse(x - 4, (YTOP + 33) - 4, x + 4, (YTOP + 33) + 4);
+            dc.MoveTo(x + 4, YTOP + 30);
+            dc.LineTo(x - 4, YTOP + 53);
         }
         // if (quarter rest)
         else if (dur == 2)
         {
             dc.SelectObject(&qRest1);
-            dc.MoveTo(x, 68);
-            dc.LineTo(x + 5, 80);
+            dc.MoveTo(x + 2, YTOP + 23);
+            dc.LineTo(x + 5, YTOP + 33);
             dc.SelectObject(&qRest2);
-            dc.LineTo(x - 1, 86);
+            dc.LineTo(x - 1, YTOP + 36);
             dc.SelectObject(&qRest1);
-            dc.LineTo(x + 4, 97);
-            dc.LineTo(x - 2, 97);
-            dc.LineTo(x + 2, 110);
+            dc.LineTo(x + 4, YTOP + 47);
+            dc.LineTo(x - 2, YTOP + 47);
+            dc.LineTo(x + 2, YTOP + 57);
         }
         // if (half rest)
         else if (dur == 4)
         {
             dc.SelectObject(&halfRest);
-            dc.MoveTo(x - 2, 88);
-            dc.LineTo(x + 4, 88);
+            dc.MoveTo(x - 2, YTOP + 38);
+            dc.LineTo(x + 4, YTOP + 38);
         }
     }
 }
@@ -393,40 +388,37 @@ void CMFCSTMProjectDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
     CDialogEx::OnLButtonDblClk(nFlags, point);
 }
 
-void CMFCSTMProjectDlg::OnBnClickedRHalfNote()
+void CMFCSTMProjectDlg::OnBnClickedRNoteSelect(UINT nID)
 {
-    m_nNoteLength = 4;
-    m_bRest = false;
-}
-
-void CMFCSTMProjectDlg::OnBnClickedRQuarterNote()
-{
-    m_nNoteLength = 2;
-    m_bRest = false;
-}
-
-void CMFCSTMProjectDlg::OnBnClickedREighthNote()
-{
-    m_nNoteLength = 1;
-    m_bRest = false;
-}
-
-void CMFCSTMProjectDlg::OnBnClickedRHalfRest()
-{
-    m_nNoteLength = 4;
-    m_bRest = true;
-}
-
-void CMFCSTMProjectDlg::OnBnClickedRQuarterRest()
-{
-    m_nNoteLength = 2;
-    m_bRest = true;
-}
-
-void CMFCSTMProjectDlg::OnBnClickedREighthRest()
-{
-    m_nNoteLength = 1;
-    m_bRest = true;
+    switch (nID)
+    {
+    case IDC_R_HALF_NOTE:
+        m_nNoteLength = 4;
+        m_bRest = false;
+        break;
+    case IDC_R_QUARTER_NOTE:
+        m_nNoteLength = 2;
+        m_bRest = false;
+        break;
+    case IDC_R_EIGHTH_NOTE:
+        m_nNoteLength = 1;
+        m_bRest = false;
+        break;
+    case IDC_R_HALF_REST:
+        m_nNoteLength = 4;
+        m_bRest = true;
+        break;
+    case IDC_R_QUARTER_REST:
+        m_nNoteLength = 2;
+        m_bRest = true;
+        break;
+    case IDC_R_EIGHTH_REST:
+        m_nNoteLength = 1;
+        m_bRest = true;
+        break;
+    default:
+        break;
+    }
 }
 
 void CMFCSTMProjectDlg::OnBnClickedBtnList()
@@ -484,11 +476,11 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             m_comm = NULL;
             AfxMessageBox(_T("COM Port Closed"));
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Open"));
+            GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(true);
+            GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(true);
             GetDlgItem(IDC_BTN_SEND)->EnableWindow(false);
             GetDlgItem(IDC_BTN_PLAY)->EnableWindow(false);
             GetDlgItem(IDC_BTN_TEMPO)->EnableWindow(false);
-            GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(true);
-            GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(true);
             GetDlgItem(IDC_COMBO_TEMPO)->EnableWindow(false);
             comport_state = false;
         }
@@ -502,10 +494,10 @@ void CMFCSTMProjectDlg::OnBnClickedConnectClose()
             AfxMessageBox(_T("COM Port Opened"));
             //GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(m_strCOMPort); // display connected port on btn
             GetDlgItem(IDC_BTN_CONNECT_CLOSE)->SetWindowText(_T("Close"));
-            GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
-            GetDlgItem(IDC_BTN_TEMPO)->EnableWindow(true);
             GetDlgItem(IDC_COMBO_COMPORT)->EnableWindow(false);
             GetDlgItem(IDC_COMBO_BAUD)->EnableWindow(false);
+            GetDlgItem(IDC_BTN_SEND)->EnableWindow(true);
+            GetDlgItem(IDC_BTN_TEMPO)->EnableWindow(true);
             GetDlgItem(IDC_COMBO_TEMPO)->EnableWindow(true);
             comport_state = true;
         }
